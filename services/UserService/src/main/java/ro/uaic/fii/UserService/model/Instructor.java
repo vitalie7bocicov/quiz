@@ -9,15 +9,13 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "instructors")
+public class Instructor {
     @Id
     @GeneratedValue
     @UuidGenerator
     private UUID id;
     private Integer domainId;
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
     private String account;
     private String password;
     private String name;
@@ -30,14 +28,14 @@ public class User {
     @UpdateTimestamp
     @Column(name = "update_ts")
     private Date updateTimestamp;
+
     private UUID insertUid;
     private UUID updateUid;
 
-    public User() {
+    public Instructor() {
     }
 
-    public User(Integer domainId,
-                UserRole role,
+    public Instructor(Integer domainId,
                 String account,
                 String password,
                 String name,
@@ -47,7 +45,6 @@ public class User {
                 UUID insertUid,
                 UUID updateUid) {
         this.domainId = domainId;
-        this.role = role;
         this.account = account;
         this.password = password;
         this.name = name;
@@ -64,14 +61,6 @@ public class User {
 
     public void setDomainId(Integer domainId) {
         this.domainId = domainId;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
     }
 
     public String getAccount() {
@@ -142,3 +131,4 @@ public class User {
         return updateUid;
     }
 }
+

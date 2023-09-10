@@ -11,10 +11,8 @@ public class UserDto {
 
     @NotNull
     private Integer domainId;
-
     @NotBlank
     private String role;
-
     @NotBlank
     @Size(min = 5, max = 20)
     private String account;
@@ -22,7 +20,6 @@ public class UserDto {
     @NotBlank
     @Size(min = 6, max = 30)
     private String password;
-
     @NotBlank
     @Size(min = 2, max = 50)
     private String name;

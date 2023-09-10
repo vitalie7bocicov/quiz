@@ -43,11 +43,11 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateSession(@PathVariable UUID id,
-                                                @RequestBody UserDto userDto)
+                                              @Valid @RequestBody UserDto userDto)
     {
         User updatedUser = UserDtoToModel.convert(userDto);
-        User User = userService.update(id, updatedUser);
-        return ResponseEntity.ok(User);
+        User user = userService.update(id, updatedUser);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")

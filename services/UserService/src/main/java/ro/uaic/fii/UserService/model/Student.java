@@ -9,15 +9,18 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "students")
+public class Student {
     @Id
     @GeneratedValue
     @UuidGenerator
     private UUID id;
     private Integer domainId;
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private Integer sessionId;
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    @ManyToOne
+    private StudentGroup group;
+    private String code;
     private String account;
     private String password;
     private String name;
@@ -30,24 +33,29 @@ public class User {
     @UpdateTimestamp
     @Column(name = "update_ts")
     private Date updateTimestamp;
+
     private UUID insertUid;
     private UUID updateUid;
 
-    public User() {
+    public Student() {
     }
 
-    public User(Integer domainId,
-                UserRole role,
-                String account,
-                String password,
-                String name,
-                String email,
-                String notes,
-                boolean active,
-                UUID insertUid,
-                UUID updateUid) {
+    public Student(Integer domainId,
+                   Integer sessionId,
+                   StudentGroup group,
+                   String code,
+                   String account,
+                   String password,
+                   String name,
+                   String email,
+                   String notes,
+                   boolean active,
+                   UUID insertUid,
+                   UUID updateUid) {
         this.domainId = domainId;
-        this.role = role;
+        this.sessionId = sessionId;
+        this.group = group;
+        this.code = code;
         this.account = account;
         this.password = password;
         this.name = name;
@@ -66,12 +74,28 @@ public class User {
         this.domainId = domainId;
     }
 
-    public UserRole getRole() {
-        return role;
+    public Integer getSessionId() {
+        return sessionId;
     }
 
-    public void setRole(UserRole role) {
-        this.role = role;
+    public void setSessionId(Integer sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public StudentGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(StudentGroup group) {
+        this.group = group;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getAccount() {
@@ -142,3 +166,4 @@ public class User {
         return updateUid;
     }
 }
+

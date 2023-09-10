@@ -1,7 +1,5 @@
 package ro.uaic.fii.UserService.convertor;
 
-import ro.uaic.fii.SessionService.dto.SessionDto;
-import ro.uaic.fii.SessionService.model.Session;
 import ro.uaic.fii.UserService.dto.UserDto;
 import ro.uaic.fii.UserService.model.User;
 
