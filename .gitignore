@@ -1,24 +1,47 @@
-# Compiled class file
-*.class
+# Maven or Gradle build directories
+/services/*/target/
+/aggregators/*/target/
+/build/
+/.gradle/
+.gradle/
 
-# Log file
+# IDE files and directories
+.idea/
+*.iml
+*.ipr
+*.iws
+/.vscode/
+
+# Logs and runtime files
+/logs/
 *.log
 
-# BlueJ files
-*.ctxt
+# Compiled Java classes
+*.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Application properties with sensitive data (modify as needed)
+/services/*/src/main/resources/application.properties
+/services/*/src/main/resources/application-k8s.properties
+/aggregators/*/src/main/resources/application.properties
+/aggregators/*/src/main/resources/application-k8s.properties
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+# Spring Boot's generated executable JAR/WAR files
+/services/*/target/*.jar
+/services/*/target/*.war
+/aggregators/*/target/*.jar
+/aggregators/*/target/*.war
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# Spring Boot's generated `static` and `templates` directories
+/services/*/target/classes/static/
+/services/*/target/classes/templates/
+/aggregators/*/target/classes/static/
+/aggregators/*/target/classes/templates/
+
+# OS and IDE-specific files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Miscellaneous
+*.bak
+*.tmp
