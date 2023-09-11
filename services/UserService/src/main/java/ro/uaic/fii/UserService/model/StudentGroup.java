@@ -12,7 +12,7 @@ import java.util.UUID;
 @Table(name = "student_groups")
 public class StudentGroup {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_groups_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_groups_sequence")
     @SequenceGenerator(name = "student_groups_sequence", sequenceName = "student_groups_id_seq", allocationSize = 1)
     private Integer id;
     private Integer domainId;

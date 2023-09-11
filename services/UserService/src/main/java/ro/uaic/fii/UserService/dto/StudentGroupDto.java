@@ -13,7 +13,6 @@ public class StudentGroupDto {
     private Integer domainId;
     @NotNull
     private Integer sessionId;
-    @NotNull
     private Integer parentGroupId;
     @NotBlank
     @Size(min = 2, max = 50)

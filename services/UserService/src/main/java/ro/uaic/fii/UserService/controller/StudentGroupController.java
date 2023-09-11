@@ -17,7 +17,6 @@ public class StudentGroupController {
 
     public StudentGroupController(StudentGroupService studentGroupService)
     {
-
         this.studentGroupService = studentGroupService;
     }
 
