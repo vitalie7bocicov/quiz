@@ -5,6 +5,7 @@ import ro.uaic.fii.UserService.exceptions.BadRequestException;
 import ro.uaic.fii.UserService.exceptions.NotFoundException;
 import ro.uaic.fii.UserService.model.Instructor;
 import ro.uaic.fii.UserService.repository.InstructorRepository;
+import ro.uaic.fii.UserService.util.PasswordEncoder;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,13 +13,16 @@ import java.util.UUID;
 @Service
 public class InstructorService {
     private final InstructorRepository repository;
-    public InstructorService(InstructorRepository repository) {
+    private final PasswordEncoder passwordEncoder;
+    public InstructorService(InstructorRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Instructor save(Instructor instructor)
     {
         try {
+            instructor.setPassword(passwordEncoder.encode(instructor.getPassword()));
             return repository.save(instructor);
         }
         catch (Exception e)
