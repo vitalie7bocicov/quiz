@@ -9,18 +9,20 @@ import java.util.UUID;
 
 public class StudentGroupDto {
 
-    @NotNull
+    @NotNull(message = "DomainId cannot be null")
     private Integer domainId;
-    @NotNull
+    @NotNull(message = "SessionId cannot be null")
     private Integer sessionId;
     private Integer parentGroupId;
-    @NotBlank
+    @NotBlank(message = "Abbr cannot be blank")
     @Size(min = 2, max = 50)
     private String abbr;
-    @NotBlank
+    @NotBlank(message = "Name cannot be blank")
     @Size(min = 2, max = 50)
     private String name;
     private String notes;
+
+    @NotNull(message = "UserUid cannot be null")
     private UUID userUid;
 
     public Integer getDomainId() {

@@ -19,11 +19,22 @@ public class InstructorService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Instructor getByAccount(String account)
+    {
+        return repository.findByAccount(account)
+                .orElseThrow(() -> new NotFoundException("Instructor with account: " + account + " not found."));
+    }
+
     public Instructor save(Instructor instructor)
     {
         try {
+            getById(instructor.getInsertUid());
             instructor.setPassword(passwordEncoder.encode(instructor.getPassword()));
             return repository.save(instructor);
+        }
+        catch (NotFoundException e)
+        {
+            throw new BadRequestException("Instructor with ID: " + instructor.getInsertUid() + " not found.");
         }
         catch (Exception e)
         {
@@ -54,5 +65,9 @@ public class InstructorService {
     public void deleteById(UUID id) {
         Instructor instructor = getById(id);
         repository.delete(instructor);
+    }
+
+    public boolean checkPassword(String plainPassword, String encPassword) {
+        return passwordEncoder.matches(plainPassword, encPassword);
     }
 }

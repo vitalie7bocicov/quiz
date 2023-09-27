@@ -1,31 +1,30 @@
 package ro.uaic.fii.UserService.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.UUID;
 
 public class InstructorReqDto {
 
-    @NotNull
+    @NotNull(message = "DomainId cannot be null")
     private Integer domainId;
-    @NotBlank
+    @NotBlank(message = "Account cannot be blank")
     @Size(min = 5, max = 20)
     private String account;
 
     @NotBlank
     @Size(min = 6, max = 30)
     private String password;
-    @NotBlank
+    @NotBlank(message = "Name cannot be blank")
     @Size(min = 2, max = 50)
     private String name;
-    @NotBlank
+    @NotBlank(message = "Email cannot be blank")
     @Email
     private String email;
     private String notes;
     private boolean active;
+
+    @NotNull(message = "UserUid cannot be null")
     private UUID userUid;
 
     public Integer getDomainId() {

@@ -28,6 +28,7 @@ public class StudentGroupController {
         {
             parentGroup = studentGroupService.getStudentGroupById(studentGroupDto.getParentGroupId());
         }
+
         StudentGroup studentGroup = StudentGroupToModel.convert(studentGroupDto);
         studentGroup.setParentGroup(parentGroup);
 

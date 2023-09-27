@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.UserService.convertor.InstructorConvertor;
+import ro.uaic.fii.UserService.dto.InstructorLoginDto;
 import ro.uaic.fii.UserService.dto.InstructorReqDto;
 import ro.uaic.fii.UserService.dto.InstructorResDto;
 import ro.uaic.fii.UserService.model.Instructor;
@@ -27,6 +28,21 @@ public class InstructorController {
         Instructor savedInstructor = instructorService.save(instructor);
         InstructorResDto savedInstructorDto = InstructorConvertor.convertResDto(savedInstructor);
         return ResponseEntity.ok(savedInstructorDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody InstructorLoginDto loginDto)
+    {
+        Instructor instructor = instructorService.getByAccount(loginDto.getAccount());
+
+        boolean loggedIn =
+                instructorService.checkPassword(loginDto.getPassword(), instructor.getPassword());
+        if (!loggedIn)
+        {
+            return ResponseEntity.badRequest().body("Incorrect password.");
+        }
+
+        return ResponseEntity.ok("Login successful.");
     }
 
     @GetMapping
