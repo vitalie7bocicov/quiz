@@ -4,8 +4,10 @@ import ro.uaic.fii.UserService.dto.InstructorReqDto;
 import ro.uaic.fii.UserService.dto.InstructorResDto;
 import ro.uaic.fii.UserService.model.Instructor;
 
+import java.util.UUID;
+
 public class InstructorConvertor {
-    public static Instructor convertReqDto(InstructorReqDto dto)
+    public static Instructor convertReqDto(InstructorReqDto dto, UUID insertUid, UUID updateUid)
     {
         return new Instructor(dto.getDomainId(),
                 dto.getAccount(),
@@ -14,8 +16,8 @@ public class InstructorConvertor {
                 dto.getEmail(),
                 dto.getNotes(),
                 dto.getActive(),
-                dto.getUserUid(),
-                dto.getUserUid());
+                insertUid,
+                updateUid);
     }
 
     public static InstructorResDto convertResDto(Instructor instructorDto) {

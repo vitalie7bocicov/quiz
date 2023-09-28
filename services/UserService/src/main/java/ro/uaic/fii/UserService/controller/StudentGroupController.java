@@ -29,7 +29,8 @@ public class StudentGroupController {
             parentGroup = studentGroupService.getStudentGroupById(studentGroupDto.getParentGroupId());
         }
 
-        StudentGroup studentGroup = StudentGroupToModel.convert(studentGroupDto);
+        StudentGroup studentGroup =
+                StudentGroupToModel.convert(studentGroupDto, studentGroupDto.getUserUid(), null);
         studentGroup.setParentGroup(parentGroup);
 
         StudentGroup savedStudentGroup = studentGroupService.save(studentGroup);
@@ -51,7 +52,7 @@ public class StudentGroupController {
         return ResponseEntity.ok(studentGroup);
     }
 
-    @PutMapping
+    @PutMapping({"/{id}"})
     public ResponseEntity<StudentGroup> updateStudentGroup(@PathVariable Integer id,
                                                            @Valid @RequestBody StudentGroupDto studentGroupDto)
     {
@@ -60,7 +61,8 @@ public class StudentGroupController {
         {
             parentGroup = studentGroupService.getStudentGroupById(studentGroupDto.getParentGroupId());
         }
-        StudentGroup studentGroup = StudentGroupToModel.convert(studentGroupDto);
+        StudentGroup studentGroup =
+                StudentGroupToModel.convert(studentGroupDto, null, studentGroupDto.getUserUid());
         studentGroup.setParentGroup(parentGroup);
 
         StudentGroup updatedStudentGroup = studentGroupService.update(id, studentGroup);

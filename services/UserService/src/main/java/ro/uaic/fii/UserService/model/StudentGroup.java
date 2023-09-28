@@ -106,10 +106,6 @@ public class StudentGroup {
         return insertUid;
     }
 
-    public void setInsertUid(UUID insertUid) {
-        this.insertUid = insertUid;
-    }
-
     public UUID getUpdateUid() {
         return updateUid;
     }
@@ -129,4 +125,6 @@ public class StudentGroup {
     public Date getUpdateTimestamp() {
         return updateTimestamp;
     }
+
+
 }

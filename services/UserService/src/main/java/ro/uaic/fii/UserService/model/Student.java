@@ -162,6 +162,9 @@ public class Student {
         return insertUid;
     }
 
+    public void setUpdateUid(UUID updateUid) {
+        this.updateUid = updateUid;
+    }
     public UUID getUpdateUid() {
         return updateUid;
     }

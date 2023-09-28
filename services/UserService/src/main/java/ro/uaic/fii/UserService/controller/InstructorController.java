@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.UserService.convertor.InstructorConvertor;
-import ro.uaic.fii.UserService.dto.InstructorLoginDto;
+import ro.uaic.fii.UserService.dto.LoginReq;
 import ro.uaic.fii.UserService.dto.InstructorReqDto;
 import ro.uaic.fii.UserService.dto.InstructorResDto;
 import ro.uaic.fii.UserService.model.Instructor;
@@ -24,14 +24,15 @@ public class InstructorController {
     @PostMapping
     public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorReqDto instructorDto)
     {
-        Instructor instructor = InstructorConvertor.convertReqDto(instructorDto);
+        Instructor instructor =
+                InstructorConvertor.convertReqDto(instructorDto, instructorDto.getUserUid(), null);
         Instructor savedInstructor = instructorService.save(instructor);
         InstructorResDto savedInstructorDto = InstructorConvertor.convertResDto(savedInstructor);
         return ResponseEntity.ok(savedInstructorDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody InstructorLoginDto loginDto)
+    public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginDto)
     {
         Instructor instructor = instructorService.getByAccount(loginDto.getAccount());
 
@@ -66,7 +67,8 @@ public class InstructorController {
     public ResponseEntity<InstructorResDto> update(@PathVariable UUID id,
                                               @Valid @RequestBody InstructorReqDto instructorDto)
     {
-        Instructor instructor = InstructorConvertor.convertReqDto(instructorDto);
+        Instructor instructor =
+                InstructorConvertor.convertReqDto(instructorDto, null, instructorDto.getUserUid());
         Instructor updatedInstructor = instructorService.update(id, instructor);
         InstructorResDto updatedInstructorDto = InstructorConvertor.convertResDto(updatedInstructor);
         return ResponseEntity.ok(updatedInstructorDto);

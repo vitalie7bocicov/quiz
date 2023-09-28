@@ -130,5 +130,9 @@ public class Instructor {
     public UUID getUpdateUid() {
         return updateUid;
     }
+
+    public void setUpdateUid(UUID updateUid) {
+        this.updateUid = updateUid;
+    }
 }
 

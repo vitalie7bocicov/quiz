@@ -59,6 +59,7 @@ public class InstructorService {
         existingInstructor.setEmail(updatedInstructor.getEmail());
         existingInstructor.setNotes(updatedInstructor.getNotes());
         existingInstructor.setActive(updatedInstructor.getActive());
+        existingInstructor.setUpdateUid(updatedInstructor.getUpdateUid());
         return repository.save(existingInstructor);
     }
 

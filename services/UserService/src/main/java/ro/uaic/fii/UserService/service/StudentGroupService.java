@@ -43,6 +43,7 @@ public class StudentGroupService {
         existingStudentGroup.setAbbr(updatedStudentGroup.getAbbr());
         existingStudentGroup.setName(updatedStudentGroup.getName());
         existingStudentGroup.setNotes(updatedStudentGroup.getNotes());
+        existingStudentGroup.setUpdateUid(updatedStudentGroup.getUpdateUid());
         return repository.save(existingStudentGroup);
     }
 

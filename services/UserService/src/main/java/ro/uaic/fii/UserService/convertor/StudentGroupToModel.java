@@ -3,9 +3,11 @@ package ro.uaic.fii.UserService.convertor;
 import ro.uaic.fii.UserService.dto.StudentGroupDto;
 import ro.uaic.fii.UserService.model.StudentGroup;
 
+import java.util.UUID;
+
 public class StudentGroupToModel {
 
-    public static StudentGroup convert(StudentGroupDto dto)
+    public static StudentGroup convert(StudentGroupDto dto, UUID insertUid, UUID updateUid)
     {
         return new StudentGroup(dto.getDomainId(),
                 dto.getSessionId(),
@@ -13,7 +15,7 @@ public class StudentGroupToModel {
                 dto.getAbbr(),
                 dto.getName(),
                 dto.getNotes(),
-                dto.getUserUid(),
-                dto.getUserUid());
+                insertUid,
+                updateUid);
     }
 }
