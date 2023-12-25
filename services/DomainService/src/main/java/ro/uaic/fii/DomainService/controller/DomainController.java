@@ -19,9 +19,9 @@ public class DomainController {
         this.domainService = domainService;
     }
     @PostMapping
-    public ResponseEntity<Domain> addDomain(@Valid @RequestBody DomainDto domainDto)
+    public ResponseEntity<Domain> addDomain(@Valid @RequestBody DomainDto dto)
     {
-        Domain domain = DomainDtoToModel.convert(domainDto);
+        Domain domain = DomainDtoToModel.convert(dto, dto.userUid(), null);
         Domain savedDomain = domainService.saveDomain(domain);
         return ResponseEntity.ok(savedDomain);
     }
@@ -49,9 +49,9 @@ public class DomainController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Domain> updateDomain(@PathVariable int id,
-                                               @RequestBody DomainDto domainDto)
+                                               @RequestBody DomainDto dto)
     {
-        Domain updateDomain = DomainDtoToModel.convert(domainDto);
+        Domain updateDomain = DomainDtoToModel.convert(dto, null, dto.userUid());
         Domain domain = domainService.updateDomain(id, updateDomain);
         return ResponseEntity.ok(domain);
     }

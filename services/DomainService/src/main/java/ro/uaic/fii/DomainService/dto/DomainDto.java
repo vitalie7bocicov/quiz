@@ -14,14 +14,4 @@ public record DomainDto(
         this.name = name;
         this.userUid = userUid;
     }
-
-    @Override
-    public String abbr() {
-        return abbr;
-    }
-
-    @Override
-    public String name() {
-        return name;
-    }
 }
