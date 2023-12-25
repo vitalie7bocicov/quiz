@@ -2,7 +2,7 @@ package ro.uaic.fii.DomainService.service;
 
 import org.springframework.stereotype.Service;
 import ro.uaic.fii.DomainService.exceptions.BadRequestException;
-import ro.uaic.fii.DomainService.exceptions.DomainNotFoundException;
+import ro.uaic.fii.DomainService.exceptions.NotFoundException;
 import ro.uaic.fii.DomainService.model.Domain;
 import ro.uaic.fii.DomainService.repository.DomainRepository;
 
@@ -32,10 +32,10 @@ public class DomainService {
 
     public Domain getDomainById(int id) {
         return repository.findById(id)
-                .orElseThrow(() -> new DomainNotFoundException("Domain with ID: " + id + " not found."));
+                .orElseThrow(() -> new NotFoundException("Domain with ID: " + id + " not found."));
     }
 
-    public Domain updateDomain(int id, Domain updateDomain) throws DomainNotFoundException{
+    public Domain updateDomain(int id, Domain updateDomain) throws NotFoundException {
         Domain existingDomain = getDomainById(id);
         existingDomain.setAbbr(updateDomain.getAbbr());
         existingDomain.setName(updateDomain.getName());

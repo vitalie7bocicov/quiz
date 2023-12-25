@@ -41,11 +41,19 @@ Worker nodes <br>
 
 <img src="images/cluster-setup.png" alt="pod" width="1000"/>
 ***
+
 ## Minikube 101
 
-Start minikube with 4 CPUS, 4GB RAM, and enable autoscaler:
+Start minikube with 2 CPUS, 2GB RAM, and enable autoscaler:
+<br>
 <code>
-minikube start --cpus 4 --memory 4000 --driver=docker --extra-config=controller-manager.horizontal-pod-autoscaler-downscale-delay=1m
+minikube start --cpus 2 --memory 2000 --driver=docker --extra-config=controller-manager.horizontal-pod-autoscaler-downscale-delay=1m
+</code>
+
+Alias for kubectl:
+<br>
+<code>
+New-Alias -Name 'k' -Value 'kubectl'
 </code>
 
 <br>
@@ -179,36 +187,41 @@ spec:
 </code>
 </pre>
 
-#### Step 2: Create a service for local PostgreSQL db
-
 <code>
-$ minikube tunnel
+kubectl apply -f postgres-service.yaml
+</code>
+
+###
+
+To expose services in Minikube to your local machine, you can use the minikube tunnel command.
+
+<br>
+<code>
+minikube tunnel
 </code>
 
 <pre>
 <code>
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-spec:
-  type: ClusterIP
-  ports:
-  - port: 5432
-    targetPort: 5432
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: postgres
-subsets:
-  - addresses:
-      - ip: 10.96.0.0
-    ports:
-      - port: 5432
-</code>
+# application.properties
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/domains
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+<code>
 </pre>
 
+<pre>
 <code>
-kubectl apply -f postgres-service.yaml
+# application-k8s.properties
+
+spring.datasource.url=jdbc:postgresql://minikube-ip:postgres-port/domains
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+<code>
+</pre>
+
+### To access from localhost the service running in the minikube cluster :
+
+<code>
+minikube service domain-service --url
 </code>

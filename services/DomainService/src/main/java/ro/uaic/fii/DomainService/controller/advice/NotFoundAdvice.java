@@ -4,15 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ro.uaic.fii.DomainService.exceptions.BadRequestException;
-import ro.uaic.fii.DomainService.exceptions.DomainNotFoundException;
+import ro.uaic.fii.DomainService.exceptions.NotFoundException;
 
 @RestControllerAdvice
 public class NotFoundAdvice {
 
-    @ExceptionHandler(DomainNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String badRequestHandler(DomainNotFoundException ex) {
+    public String badRequestHandler(NotFoundException ex) {
         return ex.getMessage();
     }
 }
