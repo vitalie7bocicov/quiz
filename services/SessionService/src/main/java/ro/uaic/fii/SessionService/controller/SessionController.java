@@ -19,9 +19,9 @@ public class SessionController {
         this.sessionService = sessionService;
     }
     @PostMapping
-    public ResponseEntity<Session> addSession(@Valid @RequestBody SessionDto sessionDto)
+    public ResponseEntity<Session> addSession(@Valid @RequestBody SessionDto dto)
     {
-        Session session = SessionDtoToModel.convert(sessionDto);
+        Session session = SessionDtoToModel.convert(dto, dto.userUid(), null);
         Session savedSession = sessionService.save(session);
         return ResponseEntity.ok(savedSession);
     }
@@ -42,9 +42,9 @@ public class SessionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Session> updateSession(@PathVariable int id,
-                                                @RequestBody SessionDto sessionDto)
+                                                @RequestBody SessionDto dto)
     {
-        Session updateSession = SessionDtoToModel.convert(sessionDto);
+        Session updateSession = SessionDtoToModel.convert(dto, null, dto.userUid());
         Session session = sessionService.update(id, updateSession);
         return ResponseEntity.ok(session);
     }

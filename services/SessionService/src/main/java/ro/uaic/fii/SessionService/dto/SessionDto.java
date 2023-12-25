@@ -16,29 +16,4 @@ public record SessionDto(
         Boolean active,
         String notes,
         UUID userUid) {
-
-    @Override
-    public Integer domainId() {
-        return domainId;
-    }
-
-    @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public Boolean active() {
-        return active;
-    }
-
-    @Override
-    public String notes() {
-        return notes;
-    }
-
-    @Override
-    public UUID userUid() {
-        return userUid;
-    }
 }
