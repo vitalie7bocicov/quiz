@@ -25,15 +25,6 @@ public class StudentController {
         this.studentService = studentService;
         this.groupService = groupService;
     }
-    @PostMapping
-    public ResponseEntity<StudentResDto> addStudent(@Valid @RequestBody StudentReqDto dto) {
-        StudentGroup group = groupService.getById(dto.getGroupId());
-        Student student =
-                StudentConvertor.convertReqDto(dto, group, dto.getUserUid(), null);
-        Student savedStudent = studentService.save(student);
-        StudentResDto savedStudentDto = StudentConvertor.convertResDto(savedStudent);
-        return ResponseEntity.ok(savedStudentDto);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginReq) {
@@ -48,6 +39,15 @@ public class StudentController {
         }
 
         return ResponseEntity.ok("Login successful.");
+    }
+    @PostMapping
+    public ResponseEntity<StudentResDto> addStudent(@Valid @RequestBody StudentReqDto dto) {
+        StudentGroup group = groupService.getById(dto.getGroupId());
+        Student student =
+                StudentConvertor.convertReqDto(dto, group, dto.getUserUid(), null);
+        Student savedStudent = studentService.save(student);
+        StudentResDto savedStudentDto = StudentConvertor.convertResDto(savedStudent);
+        return ResponseEntity.ok(savedStudentDto);
     }
 
     @GetMapping

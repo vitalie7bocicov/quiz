@@ -21,14 +21,6 @@ public class InstructorController {
     public InstructorController(InstructorService instructorService) {
         this.instructorService = instructorService;
     }
-    @PostMapping
-    public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorReqDto instructorDto) {
-        Instructor instructor =
-                InstructorConvertor.convertReqDto(instructorDto, instructorDto.getUserUid(), null);
-        Instructor savedInstructor = instructorService.save(instructor);
-        InstructorResDto savedInstructorDto = InstructorConvertor.convertResDto(savedInstructor);
-        return ResponseEntity.ok(savedInstructorDto);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginDto) {
@@ -42,6 +34,14 @@ public class InstructorController {
         }
 
         return ResponseEntity.ok("Login successful.");
+    }
+    @PostMapping
+    public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorReqDto instructorDto) {
+        Instructor instructor =
+                InstructorConvertor.convertReqDto(instructorDto, instructorDto.getUserUid(), null);
+        Instructor savedInstructor = instructorService.save(instructor);
+        InstructorResDto savedInstructorDto = InstructorConvertor.convertResDto(savedInstructor);
+        return ResponseEntity.ok(savedInstructorDto);
     }
 
     @GetMapping

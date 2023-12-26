@@ -22,7 +22,7 @@ public class StudentGroupController {
     @PostMapping
     public ResponseEntity<StudentGroup> addStudentGroup(@Valid @RequestBody StudentGroupDto studentGroupDto) {
         StudentGroup parentGroup = null;
-        if (studentGroupDto.getParentGroupId() != null)
+        if (null != studentGroupDto.getParentGroupId())
         {
             parentGroup = studentGroupService.getStudentGroupById(studentGroupDto.getParentGroupId());
         }
@@ -30,9 +30,7 @@ public class StudentGroupController {
         StudentGroup studentGroup =
                 StudentGroupToModel.convert(studentGroupDto, studentGroupDto.getUserUid(), null);
         studentGroup.setParentGroup(parentGroup);
-
         StudentGroup savedStudentGroup = studentGroupService.save(studentGroup);
-
         return ResponseEntity.ok(savedStudentGroup);
     }
 
@@ -52,16 +50,14 @@ public class StudentGroupController {
     public ResponseEntity<StudentGroup> updateStudentGroup(@PathVariable Integer id,
                                                            @Valid @RequestBody StudentGroupDto studentGroupDto) {
         StudentGroup parentGroup = null;
-        if (studentGroupDto.getParentGroupId() != null)
+        if (null != studentGroupDto.getParentGroupId())
         {
             parentGroup = studentGroupService.getStudentGroupById(studentGroupDto.getParentGroupId());
         }
         StudentGroup studentGroup =
                 StudentGroupToModel.convert(studentGroupDto, null, studentGroupDto.getUserUid());
         studentGroup.setParentGroup(parentGroup);
-
         StudentGroup updatedStudentGroup = studentGroupService.update(id, studentGroup);
-
         return ResponseEntity.ok(updatedStudentGroup);
     }
 
