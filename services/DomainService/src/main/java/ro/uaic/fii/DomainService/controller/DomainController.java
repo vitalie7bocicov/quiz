@@ -19,46 +19,40 @@ public class DomainController {
         this.domainService = domainService;
     }
     @PostMapping
-    public ResponseEntity<Domain> addDomain(@Valid @RequestBody DomainDto dto)
-    {
+    public ResponseEntity<Domain> addDomain(@Valid @RequestBody DomainDto dto) {
         Domain domain = DomainDtoToModel.convert(dto, dto.userUid(), null);
         Domain savedDomain = domainService.saveDomain(domain);
         return ResponseEntity.ok(savedDomain);
     }
 
     @GetMapping
-    public ResponseEntity<List<Domain>> getDomains()
-    {
+    public ResponseEntity<List<Domain>> getDomains() {
         List<Domain> domains = domainService.getDomains();
         return ResponseEntity.ok(domains);
     }
 
     @GetMapping({"/{id}"})
-    public ResponseEntity<Domain> getDomainById(@PathVariable int id)
-    {
+    public ResponseEntity<Domain> getDomainById(@PathVariable int id) {
         Domain domain = domainService.getDomainById(id);
         return ResponseEntity.ok(domain);
     }
 
     @GetMapping({"/check/{id}"})
-    public ResponseEntity<String> isValidDomainId(@PathVariable int id)
-    {
+    public ResponseEntity<String> isValidDomainId(@PathVariable int id) {
         Domain domain = domainService.getDomainById(id);
         return ResponseEntity.ok("Domain with ID: " + id + " is valid");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Domain> updateDomain(@PathVariable int id,
-                                               @RequestBody DomainDto dto)
-    {
+                                               @RequestBody DomainDto dto) {
         Domain updateDomain = DomainDtoToModel.convert(dto, null, dto.userUid());
         Domain domain = domainService.updateDomain(id, updateDomain);
         return ResponseEntity.ok(domain);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteDomain(@PathVariable int id)
-    {
+    public ResponseEntity<String> deleteDomain(@PathVariable int id) {
         domainService.deleteDomainById(id);
         return ResponseEntity.ok("Domain with ID: " + id + " deleted.");
     }

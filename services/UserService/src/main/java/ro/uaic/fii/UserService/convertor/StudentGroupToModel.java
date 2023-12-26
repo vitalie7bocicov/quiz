@@ -7,8 +7,7 @@ import java.util.UUID;
 
 public class StudentGroupToModel {
 
-    public static StudentGroup convert(StudentGroupDto dto, UUID insertUid, UUID updateUid)
-    {
+    public static StudentGroup convert(StudentGroupDto dto, UUID insertUid, UUID updateUid) {
         return new StudentGroup(dto.getDomainId(),
                 dto.getSessionId(),
                 null,

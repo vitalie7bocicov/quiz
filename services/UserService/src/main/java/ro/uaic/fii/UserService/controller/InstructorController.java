@@ -22,8 +22,7 @@ public class InstructorController {
         this.instructorService = instructorService;
     }
     @PostMapping
-    public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorReqDto instructorDto)
-    {
+    public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorReqDto instructorDto) {
         Instructor instructor =
                 InstructorConvertor.convertReqDto(instructorDto, instructorDto.getUserUid(), null);
         Instructor savedInstructor = instructorService.save(instructor);
@@ -32,8 +31,7 @@ public class InstructorController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginDto)
-    {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginDto) {
         Instructor instructor = instructorService.getByAccount(loginDto.getAccount());
 
         boolean loggedIn =
@@ -47,8 +45,7 @@ public class InstructorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InstructorResDto>> getAll()
-    {
+    public ResponseEntity<List<InstructorResDto>> getAll() {
         List<InstructorResDto> instructors = instructorService.getAll().stream()
                 .map(InstructorConvertor::convertResDto)
                 .toList();
@@ -56,8 +53,7 @@ public class InstructorController {
     }
 
     @GetMapping({"/{id}"})
-    public ResponseEntity<InstructorResDto> getById(@PathVariable UUID id)
-    {
+    public ResponseEntity<InstructorResDto> getById(@PathVariable UUID id) {
         Instructor instructor = instructorService.getById(id);
         InstructorResDto instructorDto = InstructorConvertor.convertResDto(instructor);
         return ResponseEntity.ok(instructorDto);
@@ -65,8 +61,7 @@ public class InstructorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<InstructorResDto> update(@PathVariable UUID id,
-                                              @Valid @RequestBody InstructorReqDto instructorDto)
-    {
+                                              @Valid @RequestBody InstructorReqDto instructorDto) {
         Instructor instructor =
                 InstructorConvertor.convertReqDto(instructorDto, null, instructorDto.getUserUid());
         Instructor updatedInstructor = instructorService.update(id, instructor);
@@ -75,8 +70,7 @@ public class InstructorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteInstructor(@PathVariable UUID id)
-    {
+    public ResponseEntity<String> deleteInstructor(@PathVariable UUID id) {
         instructorService.deleteById(id);
         return ResponseEntity.ok("Instructor with ID: " + id + " deleted.");
     }

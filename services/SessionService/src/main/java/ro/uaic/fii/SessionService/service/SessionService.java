@@ -15,8 +15,7 @@ public class SessionService {
         this.repository = repository;
     }
 
-    public Session save(Session session)
-    {
+    public Session save(Session session) {
         try {
             return repository.save(session);
         }

@@ -6,8 +6,7 @@ import ro.uaic.fii.SessionService.model.Session;
 import java.util.UUID;
 
 public class SessionDtoToModel {
-    public static Session convert(SessionDto dto, UUID insertUid, UUID updateUid)
-    {
+    public static Session convert(SessionDto dto, UUID insertUid, UUID updateUid) {
         return new Session(dto.domainId(),
                 dto.name(),
                 dto.active(),

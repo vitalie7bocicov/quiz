@@ -15,8 +15,7 @@ public class StudentGroupService {
         this.repository = repository;
     }
 
-    public StudentGroup save(StudentGroup studentGroup)
-    {
+    public StudentGroup save(StudentGroup studentGroup) {
         try {
             return repository.save(studentGroup);
         }

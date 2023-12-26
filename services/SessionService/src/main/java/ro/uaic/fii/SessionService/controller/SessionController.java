@@ -19,39 +19,34 @@ public class SessionController {
         this.sessionService = sessionService;
     }
     @PostMapping
-    public ResponseEntity<Session> addSession(@Valid @RequestBody SessionDto dto)
-    {
+    public ResponseEntity<Session> addSession(@Valid @RequestBody SessionDto dto) {
         Session session = SessionDtoToModel.convert(dto, dto.userUid(), null);
         Session savedSession = sessionService.save(session);
         return ResponseEntity.ok(savedSession);
     }
 
     @GetMapping
-    public ResponseEntity<List<Session>> getSessions()
-    {
+    public ResponseEntity<List<Session>> getSessions() {
         List<Session> sessions = sessionService.getAll();
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping({"/{id}"})
-    public ResponseEntity<Session> getById(@PathVariable int id)
-    {
+    public ResponseEntity<Session> getById(@PathVariable int id) {
         Session session = sessionService.getById(id);
         return ResponseEntity.ok(session);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Session> updateSession(@PathVariable int id,
-                                                @RequestBody SessionDto dto)
-    {
+                                                @RequestBody SessionDto dto) {
         Session updateSession = SessionDtoToModel.convert(dto, null, dto.userUid());
         Session session = sessionService.update(id, updateSession);
         return ResponseEntity.ok(session);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSession(@PathVariable int id)
-    {
+    public ResponseEntity<String> deleteSession(@PathVariable int id) {
         sessionService.deleteDomainById(id);
         return ResponseEntity.ok("Session with ID: " + id + " deleted.");
     }

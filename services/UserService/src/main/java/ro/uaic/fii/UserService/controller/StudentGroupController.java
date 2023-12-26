@@ -15,14 +15,12 @@ import java.util.List;
 public class StudentGroupController {
     private final StudentGroupService studentGroupService;
 
-    public StudentGroupController(StudentGroupService studentGroupService)
-    {
+    public StudentGroupController(StudentGroupService studentGroupService) {
         this.studentGroupService = studentGroupService;
     }
 
     @PostMapping
-    public ResponseEntity<StudentGroup> addStudentGroup(@Valid @RequestBody StudentGroupDto studentGroupDto)
-    {
+    public ResponseEntity<StudentGroup> addStudentGroup(@Valid @RequestBody StudentGroupDto studentGroupDto) {
         StudentGroup parentGroup = null;
         if (studentGroupDto.getParentGroupId() != null)
         {
@@ -39,23 +37,20 @@ public class StudentGroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StudentGroup>> getAllStudentGroups()
-    {
+    public ResponseEntity<List<StudentGroup>> getAllStudentGroups() {
         List<StudentGroup> studentGroups = studentGroupService.getAll();
         return ResponseEntity.ok(studentGroups);
     }
 
     @GetMapping({"/{id}"})
-    public ResponseEntity<StudentGroup> getStudentGroupById(@PathVariable Integer id)
-    {
+    public ResponseEntity<StudentGroup> getStudentGroupById(@PathVariable Integer id) {
         StudentGroup studentGroup = studentGroupService.getById(id);
         return ResponseEntity.ok(studentGroup);
     }
 
     @PutMapping({"/{id}"})
     public ResponseEntity<StudentGroup> updateStudentGroup(@PathVariable Integer id,
-                                                           @Valid @RequestBody StudentGroupDto studentGroupDto)
-    {
+                                                           @Valid @RequestBody StudentGroupDto studentGroupDto) {
         StudentGroup parentGroup = null;
         if (studentGroupDto.getParentGroupId() != null)
         {
@@ -71,8 +66,7 @@ public class StudentGroupController {
     }
 
     @DeleteMapping({"/{id}"})
-    public ResponseEntity<String> deleteStudentGroup(@PathVariable Integer id)
-    {
+    public ResponseEntity<String> deleteStudentGroup(@PathVariable Integer id) {
         studentGroupService.deleteById(id);
         return ResponseEntity.ok("Student group with ID: " + id + " deleted.");
     }

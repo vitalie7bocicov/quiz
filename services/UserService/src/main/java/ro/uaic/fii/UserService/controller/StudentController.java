@@ -26,8 +26,7 @@ public class StudentController {
         this.groupService = groupService;
     }
     @PostMapping
-    public ResponseEntity<StudentResDto> addStudent(@Valid @RequestBody StudentReqDto dto)
-    {
+    public ResponseEntity<StudentResDto> addStudent(@Valid @RequestBody StudentReqDto dto) {
         StudentGroup group = groupService.getById(dto.getGroupId());
         Student student =
                 StudentConvertor.convertReqDto(dto, group, dto.getUserUid(), null);
@@ -37,8 +36,7 @@ public class StudentController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginReq)
-    {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginReq) {
         Student student = studentService.getByAccount(loginReq.getAccount());
 
         boolean loggedIn =
@@ -53,8 +51,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StudentResDto>> getAll()
-    {
+    public ResponseEntity<List<StudentResDto>> getAll() {
         List<StudentResDto> students = studentService.getAll().stream()
                 .map(StudentConvertor::convertResDto)
                 .toList();
@@ -62,8 +59,7 @@ public class StudentController {
     }
 
     @GetMapping({"/{id}"})
-    public ResponseEntity<StudentResDto> getById(@PathVariable UUID id)
-    {
+    public ResponseEntity<StudentResDto> getById(@PathVariable UUID id) {
         Student student = studentService.getById(id);
         StudentResDto studentDto = StudentConvertor.convertResDto(student);
         return ResponseEntity.ok(studentDto);
@@ -71,8 +67,7 @@ public class StudentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<StudentResDto> update(@PathVariable UUID id,
-                                              @Valid @RequestBody StudentReqDto dto)
-    {
+                                              @Valid @RequestBody StudentReqDto dto) {
         StudentGroup group = groupService.getById(dto.getGroupId());
         Student student =
                 StudentConvertor.convertReqDto(dto, group, null, dto.getUserUid());
@@ -82,8 +77,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteStudent(@PathVariable UUID id)
-    {
+    public ResponseEntity<String> deleteStudent(@PathVariable UUID id) {
         studentService.deleteById(id);
         return ResponseEntity.ok("Student with ID: " + id + " deleted.");
     }

@@ -19,14 +19,12 @@ public class InstructorService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Instructor getByAccount(String account)
-    {
+    public Instructor getByAccount(String account) {
         return repository.findByAccount(account)
                 .orElseThrow(() -> new NotFoundException("Instructor with account: " + account + " not found."));
     }
 
-    public Instructor save(Instructor instructor)
-    {
+    public Instructor save(Instructor instructor) {
         try {
             getById(instructor.getInsertUid());
             instructor.setPassword(passwordEncoder.encode(instructor.getPassword()));

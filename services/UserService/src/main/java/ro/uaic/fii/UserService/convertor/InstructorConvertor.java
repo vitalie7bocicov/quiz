@@ -7,8 +7,7 @@ import ro.uaic.fii.UserService.model.Instructor;
 import java.util.UUID;
 
 public class InstructorConvertor {
-    public static Instructor convertReqDto(InstructorReqDto dto, UUID insertUid, UUID updateUid)
-    {
+    public static Instructor convertReqDto(InstructorReqDto dto, UUID insertUid, UUID updateUid) {
         return new Instructor(dto.getDomainId(),
                 dto.getAccount(),
                 dto.getPassword(),
