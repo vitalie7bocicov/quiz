@@ -24,7 +24,7 @@ spec:
         - image: vital7b/domain-service:V1
           ports:
             - containerPort: 5000
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: domain
           resources:
             requests:
@@ -51,7 +51,7 @@ spec:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-  type: LoadBalancer
+  type: ClusterIP
 
 
 

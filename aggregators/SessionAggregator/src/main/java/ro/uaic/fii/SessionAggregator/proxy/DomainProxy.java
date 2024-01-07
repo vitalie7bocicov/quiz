@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.SessionAggregator.dto.SessionDto;
 import ro.uaic.fii.SessionAggregator.model.Session;
 
-@FeignClient(name = "domain-proxy", url = "${DOMAIN_SERVICE_HOST:http://127.0.0.1}:5000")
+@FeignClient(name = "domain-proxy", url = "localhost:5000")
 public interface DomainProxy {
     @GetMapping("/domains/check/{id}")
     @ResponseBody

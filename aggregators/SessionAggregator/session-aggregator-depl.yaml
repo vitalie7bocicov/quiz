@@ -24,7 +24,7 @@ spec:
         - image: vital7b/session-aggregator:V1
           ports:
             - containerPort: 6000
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: session
           resources:
             requests:
@@ -34,7 +34,6 @@ spec:
       restartPolicy: Always
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
-  
 
 ---
 apiVersion: v1
@@ -48,7 +47,4 @@ spec:
     - protocol: TCP
       port: 6000
       targetPort: 6000
-  type: LoadBalancer
-
-
-
+  type: ClusterIP

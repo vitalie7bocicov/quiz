@@ -12,9 +12,7 @@ public class Session {
     private boolean active;
     private String notes;
     private Date insertTimestamp;
-
     private Date updateTimestamp;
-
     private UUID insertUid;
     private UUID updateUid;
 
