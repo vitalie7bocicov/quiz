@@ -18,9 +18,7 @@ public class SessionService {
     public Session save(Session session) {
         try {
             return repository.save(session);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
         }
     }
