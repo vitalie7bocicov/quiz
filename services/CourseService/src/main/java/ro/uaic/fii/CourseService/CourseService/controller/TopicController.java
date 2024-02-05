@@ -28,7 +28,7 @@ public class TopicController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Topic> getTopicById(@PathVariable int id) {
-        Topic topic = topicService.findByID(id);
+        Topic topic = topicService.getById(id);
         return ResponseEntity.ok(topic);
     }
 
@@ -37,7 +37,7 @@ public class TopicController {
         Topic topic = TopicDtoToModel.convert(dto, dto.userUid(), null);
         Topic parentTopic = null;
         if (topic.getParentId() != null) {
-            parentTopic = topicService.findByID(topic.getParentId());
+            parentTopic = topicService.getById(topic.getParentId());
         }
         Topic savedTopic = topicService.save(topic);
         return ResponseEntity.ok(savedTopic);
@@ -49,7 +49,7 @@ public class TopicController {
         Topic topic = TopicDtoToModel.convert(dto, null, dto.userUid());
         Topic parentTopic = null;
         if (topic.getParentId() != null) {
-            parentTopic = topicService.findByID(topic.getParentId());
+            parentTopic = topicService.getById(topic.getParentId());
         }
         Topic updatedTopic = topicService.update(id, topic);
         return ResponseEntity.ok(updatedTopic);

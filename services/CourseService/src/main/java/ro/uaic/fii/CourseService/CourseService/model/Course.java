@@ -1,10 +1,13 @@
 package ro.uaic.fii.CourseService.CourseService.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,6 +31,14 @@ public class Course {
 
     private UUID insertUid;
     private UUID updateUid;
+
+    @JsonManagedReference
+    @ManyToMany
+    @JoinTable(
+            name = "course_topics",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    private Set<Topic> topics = new HashSet<>();
 
     public Course() {
     }
@@ -114,5 +125,13 @@ public class Course {
 
     public Date getUpdateTimestamp() {
         return updateTimestamp;
+    }
+
+    public Set<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(Set<Topic> topics) {
+        this.topics = topics;
     }
 }

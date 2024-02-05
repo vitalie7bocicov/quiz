@@ -1,10 +1,13 @@
 package ro.uaic.fii.CourseService.CourseService.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -12,10 +15,9 @@ import java.util.UUID;
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_sequence")
-    @SequenceGenerator(name = "topic_sequence", sequenceName = "topics_id_sequence")
+    @SequenceGenerator(name = "topic_sequence", sequenceName = "topics_id_seq", allocationSize = 1)
     private Integer id;
     private Integer domainId;
-
     private Integer parentId;
     String shortName;
     String name;
@@ -28,6 +30,17 @@ public class Topic {
     private Date updateTimestamp;
     private UUID insertUid;
     private UUID updateUid;
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "topics")
+    private Set<Course> courses = new HashSet<>();
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "topics")
+    private Set<Section> sections = new HashSet<>();
+
+    public Topic(){
+    }
 
     public Topic(Integer domainId, Integer parentId, String shortName, String name, String notes, UUID insertUid, UUID updateUid) {
         this.domainId = domainId;
@@ -105,5 +118,21 @@ public class Topic {
 
     public void setUpdateUid(UUID updateUid) {
         this.updateUid = updateUid;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
+    public Set<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(Set<Section> sections) {
+        this.sections = sections;
     }
 }

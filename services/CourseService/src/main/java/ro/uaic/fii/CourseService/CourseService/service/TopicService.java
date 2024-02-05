@@ -29,13 +29,13 @@ public class TopicService {
         }
     }
 
-    public Topic findByID(int id) {
+    public Topic getById(int id) {
         return topicRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Topic with ID: " + id + " not found."));
     }
 
     public Topic update(int id, Topic topic) {
-        Topic existingTopic = findByID(id);
+        Topic existingTopic = getById(id);
         existingTopic.setDomainId(topic.getDomainId());
         existingTopic.setName(topic.getName());
         existingTopic.setShortName(topic.getShortName());
