@@ -11,6 +11,7 @@ import ro.uaic.fii.CourseService.CourseService.service.CourseService;
 import ro.uaic.fii.CourseService.CourseService.service.TopicService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/courses")
@@ -65,5 +66,24 @@ public class CourseController {
         course.getTopics().add(topic);
         courseService.save(course);
         return ResponseEntity.ok("Topic added to the course successfully");
+    }
+    // TODO replace pathvariable for this posts methods with dtos
+
+    @PostMapping("/{courseId}/addInstructor/{instructorId}")
+    public ResponseEntity<String> addInstructorToCourse(@PathVariable Integer courseId,
+                                                        @PathVariable UUID instructorId) {
+        Course course = courseService.getById(courseId);
+        course.getInstructorIds().add(instructorId);
+        courseService.save(course);
+        return ResponseEntity.ok("Instructor added to the course successfully");
+    }
+
+    @PostMapping("/{courseId}/addStudentGroup/{studentGroupId}")
+    public ResponseEntity<String> addStudentGroupToCourse(@PathVariable Integer courseId,
+                                                          @PathVariable Integer studentGroupId) {
+        Course course = courseService.getById(courseId);
+        course.getStudentGroupIds().add(studentGroupId);
+        courseService.save(course);
+        return ResponseEntity.ok("Student group added to the course successfully");
     }
 }

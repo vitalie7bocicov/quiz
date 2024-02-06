@@ -40,6 +40,21 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "topic_id"))
     private Set<Topic> topics = new HashSet<>();
 
+    @ElementCollection
+    @CollectionTable(
+        name = "instructor_courses",
+        joinColumns = @JoinColumn(name = "course_id")
+    )
+    @Column(name = "instructor_id")
+    private Set<UUID> instructorIds = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(
+            name = "course_student_groups",
+            joinColumns = @JoinColumn(name = "course_id")
+    )
+    @Column(name = "group_id")
+    private Set<Integer> studentGroupIds = new HashSet<>();
     public Course() {
     }
 
@@ -133,5 +148,21 @@ public class Course {
 
     public void setTopics(Set<Topic> topics) {
         this.topics = topics;
+    }
+
+    public Set<UUID> getInstructorIds() {
+        return instructorIds;
+    }
+
+    public void setInstructorIds(Set<UUID> instructorIds) {
+        this.instructorIds = instructorIds;
+    }
+
+    public Set<Integer> getStudentGroupIds() {
+        return studentGroupIds;
+    }
+
+    public void setStudentGroupIds(Set<Integer> studentGroupIds) {
+        this.studentGroupIds = studentGroupIds;
     }
 }

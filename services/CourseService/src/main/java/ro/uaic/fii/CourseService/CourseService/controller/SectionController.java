@@ -5,9 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.CourseService.CourseService.converter.SectionDtoToModel;
 import ro.uaic.fii.CourseService.CourseService.dto.SectionDto;
+import ro.uaic.fii.CourseService.CourseService.model.Course;
 import ro.uaic.fii.CourseService.CourseService.model.Section;
+import ro.uaic.fii.CourseService.CourseService.model.Topic;
 import ro.uaic.fii.CourseService.CourseService.service.CourseService;
 import ro.uaic.fii.CourseService.CourseService.service.SectionService;
+import ro.uaic.fii.CourseService.CourseService.service.TopicService;
 
 import java.util.List;
 
@@ -17,10 +20,12 @@ public class SectionController {
 
     private final SectionService sectionService;
     private final CourseService courseService;
+    private final TopicService topicService;
 
-    public SectionController(SectionService sectionService, CourseService courseService) {
+    public SectionController(SectionService sectionService, CourseService courseService, TopicService topicService) {
         this.sectionService = sectionService;
         this.courseService = courseService;
+        this.topicService = topicService;
     }
 
     @GetMapping
@@ -56,5 +61,15 @@ public class SectionController {
     public ResponseEntity<String> deleteSection(@PathVariable Integer id) {
         sectionService.deleteById(id);
         return ResponseEntity.ok("Topic with ID: " + id + " deleted.");
+    }
+
+    @PostMapping("/{sectionId}/addTopic/{topicId}")
+    public ResponseEntity<String> addTopicToCourse(@PathVariable Integer sectionId,
+                                                   @PathVariable Integer topicId) {
+        Section section = sectionService.getById(sectionId);
+        Topic topic = topicService.getById(topicId);
+        section.getTopics().add(topic);
+        sectionService.save(section);
+        return ResponseEntity.ok("Topic added to the section successfully");
     }
 }

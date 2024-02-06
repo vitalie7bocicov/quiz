@@ -38,7 +38,7 @@ public class Section {
     private Set<Topic> topics = new HashSet<>();
 
     public Section() {
-    }
+    } 
 
     public Section(Integer courseId, String name, Integer orderNumber, String notes, UUID insertUid, UUID updateUid) {
         this.courseId = courseId;
