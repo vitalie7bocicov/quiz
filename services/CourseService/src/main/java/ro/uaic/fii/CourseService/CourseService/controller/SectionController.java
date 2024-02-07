@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.CourseService.CourseService.converter.SectionDtoToModel;
 import ro.uaic.fii.CourseService.CourseService.dto.SectionDto;
+import ro.uaic.fii.CourseService.CourseService.dto.SectionTopicDto;
 import ro.uaic.fii.CourseService.CourseService.model.Course;
 import ro.uaic.fii.CourseService.CourseService.model.Section;
 import ro.uaic.fii.CourseService.CourseService.model.Topic;
@@ -64,10 +65,9 @@ public class SectionController {
     }
 
     @PostMapping("/{sectionId}/addTopic/{topicId}")
-    public ResponseEntity<String> addTopicToCourse(@PathVariable Integer sectionId,
-                                                   @PathVariable Integer topicId) {
-        Section section = sectionService.getById(sectionId);
-        Topic topic = topicService.getById(topicId);
+    public ResponseEntity<String> addTopicToCourse(@Valid @RequestBody SectionTopicDto sectionTopicDto) {
+        Section section = sectionService.getById(sectionTopicDto.sectionId());
+        Topic topic = topicService.getById(sectionTopicDto.topicId());
         section.getTopics().add(topic);
         sectionService.save(section);
         return ResponseEntity.ok("Topic added to the section successfully");
