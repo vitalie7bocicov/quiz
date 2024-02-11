@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.3</version>
+		<version>3.2.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ro.uaic.fii</groupId>
-	<artifactId>UserService</artifactId>
+	<artifactId>TestService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>UserService</name>
-	<description>User Service for Quiz App</description>
+	<name>TestService</name>
+	<description>Test service for quiz app</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -47,12 +47,6 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.1.0</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-crypto</artifactId>
-			<version>6.0.2</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -63,7 +57,7 @@
 				<configuration>
 					<image>
 						<name>
-							vital7b/user-service:V1
+							vital7b/test-service:V1
 						</name>
 					</image>
 					<pullPolicy>
