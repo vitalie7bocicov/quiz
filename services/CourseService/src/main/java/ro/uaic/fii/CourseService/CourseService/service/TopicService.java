@@ -41,6 +41,7 @@ public class TopicService {
         existingTopic.setShortName(topic.getShortName());
         existingTopic.setNotes(topic.getNotes());
         existingTopic.setParentId(topic.getParentId());
+        existingTopic.setUpdateUid(topic.getUpdateUid());
         return topicRepository.save(existingTopic);
     }
 
