@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tests_generator")
-    @SequenceGenerator(name = "tests_generator", sequenceName = "tests_id_seq")
+    @SequenceGenerator(name = "tests_generator", sequenceName = "tests_id_seq", allocationSize = 1)
     private Integer id;
     private Integer courseId;
     private String name;
@@ -122,7 +122,7 @@ public class Test {
         this.accessCode = accessCode;
     }
 
-    public boolean isActive() {
+    public boolean getActive() {
         return active;
     }
 
@@ -130,7 +130,7 @@ public class Test {
         this.active = active;
     }
 
-    public boolean isCompleted() {
+    public boolean getCompleted() {
         return completed;
     }
 
@@ -138,7 +138,7 @@ public class Test {
         this.completed = completed;
     }
 
-    public boolean isDemo() {
+    public boolean getDemo() {
         return demo;
     }
 
