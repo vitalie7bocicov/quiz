@@ -1,6 +1,7 @@
 package ro.uaic.fii.TestService.service;
 
 import org.springframework.stereotype.Service;
+import ro.uaic.fii.TestService.exceptions.BadRequestException;
 import ro.uaic.fii.TestService.exceptions.NotFoundException;
 import ro.uaic.fii.TestService.model.Test;
 import ro.uaic.fii.TestService.repository.TestRespository;
@@ -31,7 +32,11 @@ public class TestService {
     }
 
     public Test save(Test test) {
-        return testRespository.save(test);
+        try {
+            return testRespository.save(test);
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
     public Test update(Integer id, Test test) {
