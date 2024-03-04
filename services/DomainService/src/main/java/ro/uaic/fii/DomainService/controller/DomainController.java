@@ -37,12 +37,6 @@ public class DomainController {
         return ResponseEntity.ok(domain);
     }
 
-    @GetMapping({"/check/{id}"})
-    public ResponseEntity<String> isValidDomainId(@PathVariable int id) {
-        Domain domain = domainService.getDomainById(id);
-        return ResponseEntity.ok("Domain with ID: " + id + " is valid");
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Domain> updateDomain(@PathVariable int id,
                                                @RequestBody DomainDto dto) {
