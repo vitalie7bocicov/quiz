@@ -18,24 +18,24 @@ public class DomainService {
     private final DomainRepository domainRepository;
     private final DomainMapper domainMapper;
 
-    public DomainDto saveDomain(DomainCreateDto createDto)
+    public DomainDto save(DomainCreateDto createDto)
     {
         Domain savedDomain = domainRepository.save(domainMapper.dtoToEntity(createDto));
         return domainMapper.toDto(savedDomain);
     }
 
-    public List<DomainDto> getDomains() {
+    public List<DomainDto> getAll() {
         List<Domain> domains = domainRepository.findAll();
         return domains.stream().map(domainMapper::toDto).toList();
     }
 
-    public DomainDto getDomainById(int id) {
+    public DomainDto getById(int id) {
         Domain domain = domainRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Domain", id));
         return domainMapper.toDto(domain);
     }
 
-    public DomainDto updateDomain(int id, DomainUpdateDto updateDto) {
+    public DomainDto update(int id, DomainUpdateDto updateDto) {
         Domain existingDomain = domainRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Domain", id));
         existingDomain.setAbbr(updateDto.abbr());
@@ -45,7 +45,7 @@ public class DomainService {
         return domainMapper.toDto(updatedDomain);
     }
 
-    public void deleteDomainById(int id) {
+    public void deleteById(int id) {
         Domain domain = domainRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Domain", id));
         domainRepository.delete(domain);

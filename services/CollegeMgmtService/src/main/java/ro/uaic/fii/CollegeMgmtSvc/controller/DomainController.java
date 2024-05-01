@@ -23,17 +23,17 @@ public class DomainController {
 
     @GetMapping
     public ResponseEntity<List<DomainDto>> getDomains() {
-        return ResponseEntity.ok(domainService.getDomains());
+        return ResponseEntity.ok(domainService.getAll());
     }
 
     @GetMapping({"/{id}"})
     public ResponseEntity<DomainDto> getDomainById(@PathVariable int id) {
-        return ResponseEntity.ok(domainService.getDomainById(id));
+        return ResponseEntity.ok(domainService.getById(id));
     }
 
     @PostMapping
     public ResponseEntity<DomainDto> addDomain(@Valid @RequestBody DomainCreateDto dto) {
-        DomainDto savedDomain = domainService.saveDomain(dto);
+        DomainDto savedDomain = domainService.save(dto);
         String uri = getUriString(savedDomain);
         return ResponseEntity.created(URI.create(uri)).body(savedDomain);
     }
@@ -41,12 +41,12 @@ public class DomainController {
     @PutMapping("/{id}")
     public ResponseEntity<DomainDto> updateDomain(@PathVariable int id,
                                                @RequestBody DomainUpdateDto dto) {
-        return ResponseEntity.ok(domainService.updateDomain(id, dto));
+        return ResponseEntity.ok(domainService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDomain(@PathVariable int id) {
-        domainService.deleteDomainById(id);
+        domainService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
