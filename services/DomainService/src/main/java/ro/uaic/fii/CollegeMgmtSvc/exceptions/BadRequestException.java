@@ -1,4 +1,4 @@
-package ro.uaic.fii.DomainService.exceptions;
+package ro.uaic.fii.CollegeMgmtSvc.exceptions;
 
 public class BadRequestException extends RuntimeException {
     public BadRequestException(String message) {

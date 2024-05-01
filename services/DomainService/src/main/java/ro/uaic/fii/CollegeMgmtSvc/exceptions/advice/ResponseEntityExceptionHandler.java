@@ -1,4 +1,4 @@
-package ro.uaic.fii.DomainService.controller.advice;
+package ro.uaic.fii.CollegeMgmtSvc.exceptions.advice;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

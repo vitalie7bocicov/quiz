@@ -1,10 +1,10 @@
-package ro.uaic.fii.DomainService.controller.advice;
+package ro.uaic.fii.CollegeMgmtSvc.exceptions.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ro.uaic.fii.DomainService.exceptions.NotFoundException;
+import ro.uaic.fii.CollegeMgmtSvc.exceptions.NotFoundException;
 
 @RestControllerAdvice
 public class NotFoundAdvice {

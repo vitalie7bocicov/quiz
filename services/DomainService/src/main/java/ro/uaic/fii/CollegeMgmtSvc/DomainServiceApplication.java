@@ -1,4 +1,4 @@
-package ro.uaic.fii.DomainService;
+package ro.uaic.fii.CollegeMgmtSvc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
