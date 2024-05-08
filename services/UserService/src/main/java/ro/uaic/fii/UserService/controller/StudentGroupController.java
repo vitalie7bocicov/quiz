@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.UserService.convertor.StudentGroupToModel;
-import ro.uaic.fii.UserService.dto.StudentGroupDto;
-import ro.uaic.fii.UserService.model.StudentGroup;
+import ro.uaic.fii.UserService.dto.reqDto.StudentGroupCreateDto;
+import ro.uaic.fii.UserService.repository.model.StudentGroup;
 import ro.uaic.fii.UserService.service.StudentGroupService;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class StudentGroupController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentGroup> addStudentGroup(@Valid @RequestBody StudentGroupDto studentGroupDto) {
+    public ResponseEntity<StudentGroup> addStudentGroup(@Valid @RequestBody StudentGroupCreateDto studentGroupDto) {
         StudentGroup parentGroup = null;
         if (null != studentGroupDto.getParentGroupId())
         {
@@ -48,7 +48,7 @@ public class StudentGroupController {
 
     @PutMapping({"/{id}"})
     public ResponseEntity<StudentGroup> updateStudentGroup(@PathVariable Integer id,
-                                                           @Valid @RequestBody StudentGroupDto studentGroupDto) {
+                                                           @Valid @RequestBody StudentGroupCreateDto studentGroupDto) {
         StudentGroup parentGroup = null;
         if (null != studentGroupDto.getParentGroupId())
         {

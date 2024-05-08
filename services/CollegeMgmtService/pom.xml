@@ -78,7 +78,7 @@
 				<configuration>
 					<image>
 						<name>
-							vital7b/faculty-management-service:V1</name>
+							vital7b/college-management-service:V1</name>
 					</image>
 					<pullPolicy>
 						IF_NOT_PRESENT

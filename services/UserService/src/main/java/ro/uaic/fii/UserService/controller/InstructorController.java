@@ -4,10 +4,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.UserService.convertor.InstructorConvertor;
-import ro.uaic.fii.UserService.dto.LoginReq;
-import ro.uaic.fii.UserService.dto.InstructorReqDto;
-import ro.uaic.fii.UserService.dto.InstructorResDto;
-import ro.uaic.fii.UserService.model.Instructor;
+import ro.uaic.fii.UserService.dto.reqDto.LoginReq;
+import ro.uaic.fii.UserService.dto.reqDto.InstructorCreateDto;
+import ro.uaic.fii.UserService.dto.resDto.InstructorResDto;
+import ro.uaic.fii.UserService.repository.model.Instructor;
 import ro.uaic.fii.UserService.service.InstructorService;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class InstructorController {
         return ResponseEntity.ok("Login successful.");
     }
     @PostMapping
-    public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorReqDto instructorDto) {
+    public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorCreateDto instructorDto) {
         Instructor instructor =
                 InstructorConvertor.convertReqDto(instructorDto, instructorDto.getUserUid(), null);
         Instructor savedInstructor = instructorService.save(instructor);
@@ -61,7 +61,7 @@ public class InstructorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<InstructorResDto> update(@PathVariable UUID id,
-                                              @Valid @RequestBody InstructorReqDto instructorDto) {
+                                              @Valid @RequestBody InstructorCreateDto instructorDto) {
         Instructor instructor =
                 InstructorConvertor.convertReqDto(instructorDto, null, instructorDto.getUserUid());
         Instructor updatedInstructor = instructorService.update(id, instructor);

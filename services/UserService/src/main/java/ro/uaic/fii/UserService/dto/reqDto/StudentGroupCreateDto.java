@@ -1,6 +1,6 @@
-package ro.uaic.fii.UserService.dto;
+package ro.uaic.fii.UserService.dto.reqDto;
 
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,30 +14,20 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class StudentGroupCreateDto {
 
-    @NotNull
+    @NotNull(message = "DomainId cannot be null")
     private Integer domainId;
-    @NotBlank
-    private String role;
-    @NotBlank
-    @Size(min = 5, max = 20)
-    private String account;
-
-    @NotBlank
-    @Size(min = 6, max = 30)
-    private String password;
-    @NotBlank
+    @NotNull(message = "SessionId cannot be null")
+    private Integer sessionId;
+    private Integer parentGroupId;
+    @NotBlank(message = "Abbr cannot be blank")
+    @Size(min = 2, max = 50)
+    private String abbr;
+    @NotBlank(message = "Name cannot be blank")
     @Size(min = 2, max = 50)
     private String name;
-
-    @NotBlank
-    @Email
-    private String email;
-
     private String notes;
-
-    private boolean active;
-
+    @NotNull(message = "UserUid cannot be null")
     private UUID userUid;
 }

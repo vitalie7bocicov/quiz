@@ -1,69 +1,69 @@
 package ro.uaic.fii.UserService.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ro.uaic.fii.UserService.dto.mapper.InstructorMapper;
+import ro.uaic.fii.UserService.dto.reqDto.InstructorCreateDto;
+import ro.uaic.fii.UserService.dto.reqDto.InstructorUpdateDto;
+import ro.uaic.fii.UserService.dto.resDto.InstructorResDto;
 import ro.uaic.fii.UserService.exceptions.BadRequestException;
 import ro.uaic.fii.UserService.exceptions.NotFoundException;
-import ro.uaic.fii.UserService.model.Instructor;
 import ro.uaic.fii.UserService.repository.InstructorRepository;
+import ro.uaic.fii.UserService.repository.model.Instructor;
 import ro.uaic.fii.UserService.util.PasswordEncoder;
-
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class InstructorService {
-    private final InstructorRepository repository;
+    private final InstructorRepository instructorRepository;
     private final PasswordEncoder passwordEncoder;
-    public InstructorService(InstructorRepository repository, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public Instructor getByAccount(String account) {
-        return repository.findByAccount(account)
+    private final InstructorMapper instructorMapper;
+    public InstructorResDto getByAccount(String account) {
+        Instructor instructor =  instructorRepository.findByAccount(account)
                 .orElseThrow(() -> new NotFoundException("Instructor with account: " + account + " not found."));
+        return instructorMapper.toDto(instructor);
     }
 
-    public Instructor save(Instructor instructor) {
-        try {
-            getById(instructor.getInsertUid());
-            instructor.setPassword(passwordEncoder.encode(instructor.getPassword()));
-            return repository.save(instructor);
+    public InstructorResDto save(InstructorCreateDto createDto) {
+        if (instructorRepository.existsByAccount(createDto.getAccount())) {
+            throw new BadRequestException("Instructor", createDto.getAccount());
         }
-        catch (NotFoundException e)
-        {
-            throw new BadRequestException("Instructor with ID: " + instructor.getInsertUid() + " not found.");
-        }
-        catch (Exception e)
-        {
-            throw new BadRequestException(e.getMessage());
-        }
+        Instructor instructor = instructorMapper.dtoToEntity(createDto);
+        instructor.setPassword(passwordEncoder.encode(createDto.getPassword()));
+        return instructorMapper.toDto(instructorRepository.save(instructor));
     }
 
-    public List<Instructor> getAll() {
-        return repository.findAll();
+    public List<InstructorResDto> getAll() {
+        List<Instructor> instructors = instructorRepository.findAll();
+        return instructors.stream().map(instructorMapper::toDto).toList();
+    }
+    public InstructorResDto getById(UUID id) {
+        Instructor instructor = instructorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Instructor", id));
+        return instructorMapper.toDto(instructor);
     }
 
-    public Instructor getById(UUID id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Instructor with ID: " + id + " not found."));
-    }
-
-    public Instructor update(UUID id, Instructor updatedInstructor) throws NotFoundException {
-        Instructor existingInstructor = getById(id);
-        existingInstructor.setDomainId(updatedInstructor.getDomainId());
-        existingInstructor.setAccount(updatedInstructor.getAccount());
-        existingInstructor.setName(updatedInstructor.getName());
-        existingInstructor.setEmail(updatedInstructor.getEmail());
-        existingInstructor.setNotes(updatedInstructor.getNotes());
-        existingInstructor.setActive(updatedInstructor.getActive());
-        existingInstructor.setUpdateUid(updatedInstructor.getUpdateUid());
-        return repository.save(existingInstructor);
+    public InstructorResDto update(UUID id, InstructorUpdateDto updateDto) {
+        Instructor existingInstructor = instructorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Instructor", id));
+        existingInstructor.setDomainId(updateDto.getDomainId());
+        existingInstructor.setAccount(updateDto.getAccount());
+        existingInstructor.setName(updateDto.getName());
+        existingInstructor.setEmail(updateDto.getEmail());
+        existingInstructor.setNotes(updateDto.getNotes());
+        existingInstructor.setActive(updateDto.isActive());
+        existingInstructor.setUpdateUid(updateDto.getUserUid());
+        Instructor updatedInstructor =  instructorRepository.save(existingInstructor);
+        return instructorMapper.toDto(updatedInstructor);
     }
 
     public void deleteById(UUID id) {
-        Instructor instructor = getById(id);
-        repository.delete(instructor);
+        if (!instructorRepository.existsById(id)) {
+            throw new NotFoundException("Instructor", id);
+        }
+        instructorRepository.deleteById(id);
     }
 
     public boolean checkPassword(String plainPassword, String encPassword) {
