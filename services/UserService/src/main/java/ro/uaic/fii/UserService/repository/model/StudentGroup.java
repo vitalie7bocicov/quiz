@@ -25,7 +25,7 @@ public class StudentGroup {
     private Integer id;
     private Integer domainId;
     private Integer sessionId;
-    private Integer parentGroupId;
+    private Integer parentId;
     private String abbr;
     private String name;
     private String notes;

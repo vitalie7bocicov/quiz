@@ -1,77 +1,65 @@
 package ro.uaic.fii.UserService.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.uaic.fii.UserService.convertor.InstructorConvertor;
-import ro.uaic.fii.UserService.dto.reqDto.LoginReq;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.uaic.fii.UserService.dto.reqDto.InstructorCreateDto;
+import ro.uaic.fii.UserService.dto.reqDto.InstructorUpdateDto;
+import ro.uaic.fii.UserService.dto.reqDto.LoginReq;
 import ro.uaic.fii.UserService.dto.resDto.InstructorResDto;
-import ro.uaic.fii.UserService.repository.model.Instructor;
 import ro.uaic.fii.UserService.service.InstructorService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/instructors")
+@RequiredArgsConstructor
 public class InstructorController {
-    private final InstructorService instructorService;
 
-    public InstructorController(InstructorService instructorService) {
-        this.instructorService = instructorService;
-    }
+    private final InstructorService instructorService;
+    private final HttpServletRequest request;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginReq loginDto) {
-        Instructor instructor = instructorService.getByAccount(loginDto.getAccount());
-
-        boolean loggedIn =
-                instructorService.checkPassword(loginDto.getPassword(), instructor.getPassword());
-        if (!loggedIn)
-        {
-            return ResponseEntity.badRequest().body("Incorrect password.");
-        }
-
         return ResponseEntity.ok("Login successful.");
     }
     @PostMapping
     public ResponseEntity<InstructorResDto> addInstructor(@Valid @RequestBody InstructorCreateDto instructorDto) {
-        Instructor instructor =
-                InstructorConvertor.convertReqDto(instructorDto, instructorDto.getUserUid(), null);
-        Instructor savedInstructor = instructorService.save(instructor);
-        InstructorResDto savedInstructorDto = InstructorConvertor.convertResDto(savedInstructor);
-        return ResponseEntity.ok(savedInstructorDto);
+        InstructorResDto savedInstructor = instructorService.save(instructorDto);
+        String uri = getUriString(savedInstructor);
+        return ResponseEntity.created(URI.create(uri)).body(savedInstructor);
     }
 
     @GetMapping
     public ResponseEntity<List<InstructorResDto>> getAll() {
-        List<InstructorResDto> instructors = instructorService.getAll().stream()
-                .map(InstructorConvertor::convertResDto)
-                .toList();
-        return ResponseEntity.ok(instructors);
+        return ResponseEntity.ok(instructorService.getAll());
     }
 
     @GetMapping({"/{id}"})
     public ResponseEntity<InstructorResDto> getById(@PathVariable UUID id) {
-        Instructor instructor = instructorService.getById(id);
-        InstructorResDto instructorDto = InstructorConvertor.convertResDto(instructor);
-        return ResponseEntity.ok(instructorDto);
+        return ResponseEntity.ok(instructorService.getById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<InstructorResDto> update(@PathVariable UUID id,
-                                              @Valid @RequestBody InstructorCreateDto instructorDto) {
-        Instructor instructor =
-                InstructorConvertor.convertReqDto(instructorDto, null, instructorDto.getUserUid());
-        Instructor updatedInstructor = instructorService.update(id, instructor);
-        InstructorResDto updatedInstructorDto = InstructorConvertor.convertResDto(updatedInstructor);
-        return ResponseEntity.ok(updatedInstructorDto);
+                                              @Valid @RequestBody InstructorUpdateDto instructorDto) {
+        return ResponseEntity.ok(instructorService.update(id, instructorDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteInstructor(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteInstructor(@PathVariable UUID id) {
         instructorService.deleteById(id);
-        return ResponseEntity.ok("Instructor with ID: " + id + " deleted.");
+        return ResponseEntity.noContent().build();
+    }
+    private String getUriString(InstructorResDto dto) {
+        return ServletUriComponentsBuilder.fromRequestUri(request)
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUriString();
     }
 }

@@ -19,17 +19,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final StudentGroupRepo studentGroupRepository;
     private final PasswordEncoder passwordEncoder;
     private final StudentMapper studentMapper;
-    private final StudentGroupRepo studentGroupRepository;
+
     public Student getByAccount(String account) {
         return studentRepository.findByAccount(account)
-                .orElseThrow(() -> new NotFoundException("Student with account: " + account + " not found."));
+                .orElseThrow(() -> new NotFoundException("Student", account));
     }
 
     public StudentResDto getById(UUID id) {
          Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Student with ID: " + id + " not found."));
+                .orElseThrow(() -> new NotFoundException("Student", id));
         return studentMapper.toDto(student);
     }
 
@@ -65,6 +66,7 @@ public class StudentService {
         existingStudent.setEmail(updateDto.getEmail());
         existingStudent.setNotes(updateDto.getNotes());
         existingStudent.setActive(updateDto.isActive());
+        existingStudent.setUpdateUid(updateDto.getUserUid());
         Student updatedStudent = studentRepository.save(existingStudent);
         return studentMapper.toDto(updatedStudent);
     }

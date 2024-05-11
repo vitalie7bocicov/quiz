@@ -21,7 +21,7 @@ public class StudentGroupUpdateDto {
     private Integer domainId;
     @NotNull(message = "SessionId cannot be null")
     private Integer sessionId;
-    private Integer parentGroupId;
+    private Integer parentId;
     @NotBlank(message = "Abbr cannot be blank")
     @Size(min = 2, max = 50)
     private String abbr;

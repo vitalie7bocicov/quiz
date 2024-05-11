@@ -34,29 +34,33 @@ public class StudentGroupService {
 
     public StudentGroupResDto getById(int id) {
         StudentGroup studentGroup = studentGroupRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Student group with ID: " + id + " not found."));
+                .orElseThrow(() -> new NotFoundException("Student group", id));
         return studentGroupMapper.toDto(studentGroup);
     }
 
     public StudentGroupResDto update(int id, StudentGroupUpdateDto updateDto) {
-        StudentGroup existingStudentGroup = getById(id);
+        StudentGroup existingStudentGroup = studentGroupRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Student group", id));
         existingStudentGroup.setDomainId(updateDto.getDomainId());
         existingStudentGroup.setSessionId(updateDto.getSessionId());
-        existingStudentGroup.setParentGroup(updateDto.getParentGroupId());
+        existingStudentGroup.setParentId(updateDto.getParentId());
         existingStudentGroup.setAbbr(updateDto.getAbbr());
         existingStudentGroup.setName(updateDto.getName());
         existingStudentGroup.setNotes(updateDto.getNotes());
-        existingStudentGroup.setUpdateUid(updateDto.getUpdateUid());
-        return studentGroupRepository.save(existingStudentGroup);
+        existingStudentGroup.setUpdateUid(updateDto.getUserUid());
+        StudentGroup updatedStudentGroup = studentGroupRepository.save(existingStudentGroup);
+        return studentGroupMapper.toDto(updatedStudentGroup);
     }
 
     public void deleteById(int id) {
-        StudentGroup studentGroup = getById(id);
+        StudentGroup studentGroup = studentGroupRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Student group", id));
         studentGroupRepository.delete(studentGroup);
     }
 
-    public StudentGroup getStudentGroupById(Integer studentGroupId) {
-        return studentGroupRepository.findById(studentGroupId)
-                .orElseThrow(() -> new NotFoundException("Student group with ID: " + studentGroupId + " not found."));
+    public StudentGroupResDto getStudentGroupById(int studentGroupId) {
+        StudentGroup studentGroup = studentGroupRepository.findById(studentGroupId)
+                .orElseThrow(() -> new NotFoundException("StudentGroup", studentGroupId));
+        return studentGroupMapper.toDto(studentGroup);
     }
 }

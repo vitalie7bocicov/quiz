@@ -1,69 +1,57 @@
 package ro.uaic.fii.UserService.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.uaic.fii.UserService.convertor.StudentGroupToModel;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.uaic.fii.UserService.dto.reqDto.StudentGroupCreateDto;
-import ro.uaic.fii.UserService.repository.model.StudentGroup;
+import ro.uaic.fii.UserService.dto.reqDto.StudentGroupUpdateDto;
+import ro.uaic.fii.UserService.dto.resDto.StudentGroupResDto;
 import ro.uaic.fii.UserService.service.StudentGroupService;
 
+import java.net.URI;
 import java.util.List;
-
 @RestController
 @RequestMapping("/student-groups")
+@RequiredArgsConstructor
 public class StudentGroupController {
+
     private final StudentGroupService studentGroupService;
-
-    public StudentGroupController(StudentGroupService studentGroupService) {
-        this.studentGroupService = studentGroupService;
-    }
-
-    @PostMapping
-    public ResponseEntity<StudentGroup> addStudentGroup(@Valid @RequestBody StudentGroupCreateDto studentGroupDto) {
-        StudentGroup parentGroup = null;
-        if (null != studentGroupDto.getParentGroupId())
-        {
-            parentGroup = studentGroupService.getStudentGroupById(studentGroupDto.getParentGroupId());
-        }
-
-        StudentGroup studentGroup =
-                StudentGroupToModel.convert(studentGroupDto, studentGroupDto.getUserUid(), null);
-        studentGroup.setParentGroup(parentGroup);
-        StudentGroup savedStudentGroup = studentGroupService.save(studentGroup);
-        return ResponseEntity.ok(savedStudentGroup);
-    }
+    private final HttpServletRequest request;
 
     @GetMapping
-    public ResponseEntity<List<StudentGroup>> getAllStudentGroups() {
-        List<StudentGroup> studentGroups = studentGroupService.getAll();
-        return ResponseEntity.ok(studentGroups);
+    public ResponseEntity<List<StudentGroupResDto>> getAllStudentGroups() {
+        return ResponseEntity.ok(studentGroupService.getAll());
     }
 
     @GetMapping({"/{id}"})
-    public ResponseEntity<StudentGroup> getStudentGroupById(@PathVariable Integer id) {
-        StudentGroup studentGroup = studentGroupService.getById(id);
-        return ResponseEntity.ok(studentGroup);
+    public ResponseEntity<StudentGroupResDto> getStudentGroupById(@PathVariable int id) {
+        return ResponseEntity.ok(studentGroupService.getById(id));
     }
 
+    @PostMapping
+    public ResponseEntity<StudentGroupResDto> addStudentGroup(@Valid @RequestBody StudentGroupCreateDto studentGroupDto) {
+        StudentGroupResDto savedStudentGroup = studentGroupService.save(studentGroupDto);
+        String uri = getUriString(savedStudentGroup);
+        return ResponseEntity.created(URI.create(uri)).body(savedStudentGroup);
+    }
     @PutMapping({"/{id}"})
-    public ResponseEntity<StudentGroup> updateStudentGroup(@PathVariable Integer id,
-                                                           @Valid @RequestBody StudentGroupCreateDto studentGroupDto) {
-        StudentGroup parentGroup = null;
-        if (null != studentGroupDto.getParentGroupId())
-        {
-            parentGroup = studentGroupService.getStudentGroupById(studentGroupDto.getParentGroupId());
-        }
-        StudentGroup studentGroup =
-                StudentGroupToModel.convert(studentGroupDto, null, studentGroupDto.getUserUid());
-        studentGroup.setParentGroup(parentGroup);
-        StudentGroup updatedStudentGroup = studentGroupService.update(id, studentGroup);
-        return ResponseEntity.ok(updatedStudentGroup);
+    public ResponseEntity<StudentGroupResDto> updateStudentGroup(@PathVariable int id,
+                                                           @Valid @RequestBody StudentGroupUpdateDto updateDto) {
+        return ResponseEntity.ok(studentGroupService.update(id, updateDto));
     }
 
     @DeleteMapping({"/{id}"})
-    public ResponseEntity<String> deleteStudentGroup(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteStudentGroup(@PathVariable int id) {
         studentGroupService.deleteById(id);
-        return ResponseEntity.ok("Student group with ID: " + id + " deleted.");
+        return ResponseEntity.noContent().build();
+    }
+    private String getUriString(StudentGroupResDto dto) {
+        return ServletUriComponentsBuilder.fromRequestUri(request)
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUriString();
     }
 }

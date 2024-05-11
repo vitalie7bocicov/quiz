@@ -14,4 +14,8 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException(String user, UUID id) {
         super("Could not find %s with id: %s".formatted(user, id));
     }
+
+    public NotFoundException(String user, String account) {
+        super("Could not find %s with account: %s".formatted(user, account));
+    }
 }

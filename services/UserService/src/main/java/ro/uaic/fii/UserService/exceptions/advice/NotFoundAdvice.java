@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ro.uaic.fii.CollegeMgmtSvc.exceptions.NotFoundException;
+import ro.uaic.fii.UserService.exceptions.NotFoundException;
 
 @RestControllerAdvice
 public class NotFoundAdvice {

@@ -11,7 +11,6 @@ import ro.uaic.fii.UserService.dto.reqDto.StudentCreateDto;
 import ro.uaic.fii.UserService.dto.reqDto.StudentUpdateDto;
 import ro.uaic.fii.UserService.dto.resDto.StudentResDto;
 import ro.uaic.fii.UserService.repository.model.Student;
-import ro.uaic.fii.UserService.service.StudentGroupService;
 import ro.uaic.fii.UserService.service.StudentService;
 
 import java.util.List;
@@ -24,7 +23,6 @@ import static java.net.URI.create;
 @RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
-    private final StudentGroupService groupService;
     private final HttpServletRequest request;
 
     @GetMapping
