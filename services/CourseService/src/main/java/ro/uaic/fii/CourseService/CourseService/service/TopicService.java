@@ -1,51 +1,59 @@
 package ro.uaic.fii.CourseService.CourseService.service;
 
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ro.uaic.fii.CourseService.CourseService.dto.mapper.TopicMapper;
+import ro.uaic.fii.CourseService.CourseService.dto.reqDto.TopicReqDto;
+import ro.uaic.fii.CourseService.CourseService.dto.resDto.TopicResDto;
 import ro.uaic.fii.CourseService.CourseService.exceptions.BadRequestException;
 import ro.uaic.fii.CourseService.CourseService.exceptions.NotFoundException;
-import ro.uaic.fii.CourseService.CourseService.model.Topic;
+import ro.uaic.fii.CourseService.CourseService.repository.model.Topic;
 import ro.uaic.fii.CourseService.CourseService.repository.TopicRepository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TopicService {
-    private TopicRepository topicRepository;
+    private final TopicRepository topicRepository;
+    private final TopicMapper topicMapper;
 
-    public TopicService(TopicRepository topicRepository) {
-        this.topicRepository = topicRepository;
+    public List<TopicResDto> getAll() {
+        List<Topic> topics = topicRepository.findAll();
+        return topics.stream().map(topicMapper::toDto).toList();
     }
 
-    public List<Topic> getAll() {
-        return topicRepository.findAll();
-    }
-
-    public Topic save(Topic topic) {
-        try {
-            return topicRepository.save(topic);
-        } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+    public TopicResDto save(TopicReqDto createDto) {
+        if (!topicRepository.existsById(createDto.getDomainId())) {
+            throw new BadRequestException("Domain", createDto.getDomainId(), "not found.");
         }
+        Topic savedTopic = topicRepository.save(topicMapper.dtoToEntity(createDto));
+        return topicMapper.toDto(savedTopic);
     }
 
-    public Topic getById(int id) {
-        return topicRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Topic with ID: " + id + " not found."));
+    public TopicResDto getById(int id) {
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Topic", id));
+        return topicMapper.toDto(topic);
     }
 
-    public Topic update(int id, Topic topic) {
-        Topic existingTopic = getById(id);
-        existingTopic.setDomainId(topic.getDomainId());
-        existingTopic.setName(topic.getName());
-        existingTopic.setShortName(topic.getShortName());
-        existingTopic.setNotes(topic.getNotes());
-        existingTopic.setParentId(topic.getParentId());
-        existingTopic.setUpdateUid(topic.getUpdateUid());
-        return topicRepository.save(existingTopic);
+    public TopicResDto update(int id, TopicReqDto updateDto) {
+        Topic existingTopic = topicRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Topic", id));
+        existingTopic.setDomainId(updateDto.getDomainId());
+        existingTopic.setName(updateDto.getName());
+        existingTopic.setShortName(updateDto.getShortName());
+        existingTopic.setNotes(updateDto.getNotes());
+        existingTopic.setParentId(updateDto.getParentId());
+        existingTopic.setUpdateUid(updateDto.getUserUid());
+        Topic updatedTopic = topicRepository.save(existingTopic);
+        return topicMapper.toDto(updatedTopic);
     }
 
     public void deleteById(int id) {
+        if (!topicRepository.existsById(id)) {
+            throw new NotFoundException("Topic", id);
+        }
         topicRepository.deleteById(id);
     }
 }

@@ -1,75 +1,65 @@
 package ro.uaic.fii.CourseService.CourseService.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.uaic.fii.CourseService.CourseService.converter.SectionDtoToModel;
-import ro.uaic.fii.CourseService.CourseService.dto.SectionDto;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ro.uaic.fii.CourseService.CourseService.dto.SectionTopicDto;
-import ro.uaic.fii.CourseService.CourseService.model.Course;
-import ro.uaic.fii.CourseService.CourseService.model.Section;
-import ro.uaic.fii.CourseService.CourseService.model.Topic;
-import ro.uaic.fii.CourseService.CourseService.service.CourseService;
+import ro.uaic.fii.CourseService.CourseService.dto.reqDto.SectionReqDto;
+import ro.uaic.fii.CourseService.CourseService.dto.resDto.SectionResDto;
 import ro.uaic.fii.CourseService.CourseService.service.SectionService;
-import ro.uaic.fii.CourseService.CourseService.service.TopicService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/sections")
+@RequiredArgsConstructor
 public class SectionController {
 
     private final SectionService sectionService;
-    private final CourseService courseService;
-    private final TopicService topicService;
-
-    public SectionController(SectionService sectionService, CourseService courseService, TopicService topicService) {
-        this.sectionService = sectionService;
-        this.courseService = courseService;
-        this.topicService = topicService;
-    }
+    private final HttpServletRequest request;
 
     @GetMapping
-    public ResponseEntity<List<Section>> getAllSections() {
-        List<Section> sections = sectionService.getAll();
-        return ResponseEntity.ok(sections);
+    public ResponseEntity<List<SectionResDto>> getAllSections() {
+        return ResponseEntity.ok(sectionService.getAll());
     }
 
     @GetMapping("/{id}")
-    public  ResponseEntity<Section> getSection(@PathVariable Integer id) {
-        Section section = sectionService.getById(id);
-        return ResponseEntity.ok(section);
+    public  ResponseEntity<SectionResDto> getSection(@PathVariable int id) {
+        return ResponseEntity.ok(sectionService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Section> createSection(@Valid @RequestBody SectionDto dto) {
-        Section section = SectionDtoToModel.convert(dto, dto.userUid(), null);
-        courseService.getById(dto.courseId()); // throws not found ex
-        Section savedSection = sectionService.save(section);
-        return ResponseEntity.ok(savedSection);
+    public ResponseEntity<SectionResDto> createSection(@Valid @RequestBody SectionReqDto dto) {
+        SectionResDto savedSection = sectionService.save(dto);
+        String uri = getUriString(savedSection);
+        return ResponseEntity.created(URI.create(uri)).body(savedSection);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Section> updateSection(@PathVariable Integer id,
-                                                 @Valid @RequestBody SectionDto dto) {
-        Section section = SectionDtoToModel.convert(dto, null , dto.userUid());
-        courseService.getById(dto.courseId()); // throws not found ex
-        Section updatedSection = sectionService.update(id, section);
-        return ResponseEntity.ok(updatedSection);
+    public ResponseEntity<SectionResDto> updateSection(@PathVariable Integer id,
+                                                 @Valid @RequestBody SectionReqDto dto) {
+        return ResponseEntity.ok(sectionService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSection(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteSection(@PathVariable Integer id) {
         sectionService.deleteById(id);
-        return ResponseEntity.ok("Topic with ID: " + id + " deleted.");
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{sectionId}/addTopic/{topicId}")
+    @PostMapping("/addTopic")
     public ResponseEntity<String> addTopicToCourse(@Valid @RequestBody SectionTopicDto sectionTopicDto) {
-        Section section = sectionService.getById(sectionTopicDto.sectionId());
-        Topic topic = topicService.getById(sectionTopicDto.topicId());
-        section.getTopics().add(topic);
-        sectionService.save(section);
+        sectionService.addTopicToSection(sectionTopicDto);
         return ResponseEntity.ok("Topic added to the section successfully");
+    }
+    private String getUriString(SectionResDto dto) {
+        return ServletUriComponentsBuilder.fromRequestUri(request)
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUriString();
     }
 }

@@ -1,4 +1,4 @@
-package ro.uaic.fii.CourseService.CourseService.controller.advice;
+package ro.uaic.fii.CourseService.CourseService.exceptions.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
