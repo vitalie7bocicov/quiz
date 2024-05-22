@@ -25,12 +25,6 @@ public class CourseService {
     private final CourseMapper courseMapper;
 
     public CourseResDto save(CourseReqDto createDto) {
-        if (!courseRepository.existsById(createDto.getDomainId())) {
-            throw new BadRequestException("Domain", createDto.getDomainId(), "not found.");
-        }
-        if (!courseRepository.existsById(createDto.getSessionId())) {
-            throw new BadRequestException("Session", createDto.getSessionId(), "not found.");
-        }
         Course savedCourse = courseRepository.save(courseMapper.dtoToEntity(createDto));
         return courseMapper.toDto(savedCourse);
     }

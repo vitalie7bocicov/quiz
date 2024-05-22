@@ -1,13 +1,9 @@
 package ro.uaic.fii.CourseService.CourseService.dto.resDto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import ro.uaic.fii.CourseService.CourseService.repository.model.Topic;
 
 import java.util.Date;

@@ -64,7 +64,7 @@ public class CourseController {
         return ResponseEntity.ok("Instructor added to the course successfully");
     }
 
-    @PostMapping("/{courseId}/addStudentGroup")
+    @PostMapping("/addStudentGroup")
     public ResponseEntity<String> addStudentGroupToCourse(@Valid @RequestBody CourseStudentGroupDto courseGroupDto) {
         courseService.addStudentGroupToCourse(courseGroupDto);
         return ResponseEntity.ok("Student group added to the course successfully");
