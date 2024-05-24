@@ -3,7 +3,7 @@ package ro.uaic.fii.TestService.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.uaic.fii.TestService.converter.TestReqDtoToModel;
-import ro.uaic.fii.TestService.dto.TestReqDto;
+import ro.uaic.fii.TestService.dto.reqDto.TestReqDto;
 import ro.uaic.fii.TestService.model.Test;
 import ro.uaic.fii.TestService.service.TestService;
 

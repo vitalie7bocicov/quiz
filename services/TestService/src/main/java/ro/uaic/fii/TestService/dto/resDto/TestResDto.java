@@ -1,4 +1,4 @@
-package ro.uaic.fii.TestService.model;
+package ro.uaic.fii.TestService.dto.resDto;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,16 +12,11 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tests")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Test {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tests_generator")
-    @SequenceGenerator(name = "tests_generator", sequenceName = "tests_id_seq", allocationSize = 1)
+public class TestResDto {
     private Integer id;
     private Integer courseId;
     private String name;
@@ -31,15 +26,10 @@ public class Test {
     private Integer optNumber;
     private String accessCode;
     private boolean active;
-    @Column(name = "completed", columnDefinition = "boolean default false")
     private boolean completed;
     private boolean demo;
     private String notes;
-    @CreationTimestamp
-    @Column(name = "insert_ts", updatable = false)
     private Date insertTimestamp;
-    @UpdateTimestamp
-    @Column(name = "update_ts")
     private Date updateTimestamp;
     private UUID insertUid;
     private UUID updateUid;
