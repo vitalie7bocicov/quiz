@@ -1,62 +1,68 @@
 package ro.uaic.fii.TestService.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ro.uaic.fii.TestService.exceptions.BadRequestException;
+import ro.uaic.fii.TestService.dto.mapper.TestMapper;
+import ro.uaic.fii.TestService.dto.reqDto.TestReqDto;
+import ro.uaic.fii.TestService.dto.resDto.TestResDto;
 import ro.uaic.fii.TestService.exceptions.NotFoundException;
-import ro.uaic.fii.TestService.model.Test;
+import ro.uaic.fii.TestService.repository.model.Test;
 import ro.uaic.fii.TestService.repository.TestRespository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TestService {
 
     private final TestRespository testRespository;
+    private final TestMapper testMapper;
 
-    public TestService(TestRespository testRespository) {
-        this.testRespository = testRespository;
+    public List<TestResDto> getAll() {
+        List<Test> tests = testRespository.findAll();
+        return tests.stream().map(testMapper::toDto).toList();
     }
 
-    public List<Test> getAll() {
-        return testRespository.findAll();
+    public TestResDto getById(int id) {
+        Test test =  testRespository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Test", id));
+        return testMapper.toDto(test);
     }
 
-    public Test getById(Integer id) {
-        return testRespository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Test with ID: " + id + " not found."));
+    public TestResDto getByGroupId(int groupId) {
+        Test test =  testRespository.findByGroupId(groupId)
+                .orElseThrow(() -> new NotFoundException("Group id", groupId));
+        return testMapper.toDto(test);
     }
 
-    public Test getByGroupId(Integer groupId) {
-        return (Test) testRespository.findByGroupId(groupId)
-                .orElseThrow(() -> new NotFoundException("Test with Group ID: " + groupId + " not found."));
+    public TestResDto save(TestReqDto dto) {
+        Test savedTest = testRespository.save(testMapper.dtoToEntity(dto));
+        return testMapper.toDto(savedTest);
     }
 
-    public Test save(Test test) {
-        try {
-            return testRespository.save(test);
-        } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+    public TestResDto update(int id, TestReqDto dto) {
+        Test testToUpdate = testRespository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Test", id));
+        testToUpdate.setCourseId(dto.getCourseId());
+        testToUpdate.setName(dto.getName());
+        testToUpdate.setGroupId(dto.getGroupId());
+        testToUpdate.setStartTime(dto.getStartTime());
+        testToUpdate.setDuration(dto.getDuration());
+        testToUpdate.setOptNumber(dto.getOptNumber());
+        testToUpdate.setAccessCode(dto.getAccessCode());
+        testToUpdate.setActive(dto.isActive());
+        testToUpdate.setCompleted(dto.isCompleted());
+        testToUpdate.setDemo(dto.isDemo());
+        testToUpdate.setNotes(dto.getNotes());
+        testToUpdate.setUpdateUid(dto.getUserUid());
+        Test updatedTest = testRespository.save(testToUpdate);
+        return testMapper.toDto(updatedTest);
+    }
+
+    public void deleteById(int id) {
+        if (!testRespository.existsById(id)) {
+            throw new NotFoundException("Test", id);
         }
-    }
-
-    public Test update(Integer id, Test test) {
-        Test testToUpdate = getById(id);
-        testToUpdate.setCourseId(test.getCourseId());
-        testToUpdate.setName(test.getName());
-        testToUpdate.setGroupId(test.getGroupId());
-        testToUpdate.setStartTime(test.getStartTime());
-        testToUpdate.setDuration(test.getDuration());
-        testToUpdate.setOptNumber(test.getOptNumber());
-        testToUpdate.setAccessCode(test.getAccessCode());
-        testToUpdate.setActive(test.getActive());
-        testToUpdate.setCompleted(test.getCompleted());
-        testToUpdate.setDemo(test.getDemo());
-        testToUpdate.setNotes(test.getNotes());
-        testToUpdate.setUpdateUid(test.getUpdateUid());
-        return testRespository.save(testToUpdate);
-    }
-
-    public void deleteById(Integer id) {
         testRespository.deleteById(id);
     }
 }

@@ -32,6 +32,7 @@ public class TestReqDto {
     @NotNull
     private boolean active;
     private boolean demo;
+    private boolean completed;
     private String notes;
     @NotNull
     private UUID userUid;

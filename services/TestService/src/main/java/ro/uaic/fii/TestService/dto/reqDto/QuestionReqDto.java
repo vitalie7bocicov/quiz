@@ -1,5 +1,7 @@
 package ro.uaic.fii.TestService.dto.reqDto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +14,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionReqDto {
-    private Integer id;
+    @NotNull
     private Integer domainId;
+    @NotBlank
     private String content;
     private boolean active;
     private String notes;
+    @NotNull
     private UUID userUid;
 }

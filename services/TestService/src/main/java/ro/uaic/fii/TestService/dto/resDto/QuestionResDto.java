@@ -14,12 +14,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class QuestionResDto {
     private Integer id;
-    private Integer testId;
-    private Integer sectionId;
-    private Integer topicId;
-    private Character qsType;
-    private Integer qsNumber;
-    private Integer orderNumber;
+    private Integer domainId;
+    private String content;
+    private boolean active;
+    private String notes;
     private Date insertTimestamp;
     private Date updateTimestamp;
     private UUID insertUid;

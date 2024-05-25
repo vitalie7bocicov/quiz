@@ -1,74 +1,61 @@
 package ro.uaic.fii.TestService.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.uaic.fii.TestService.converter.ResponseDtoToModel;
-import ro.uaic.fii.TestService.dto.ResponseDto;
-import ro.uaic.fii.TestService.model.Response;
-import ro.uaic.fii.TestService.service.ParticipantService;
-import ro.uaic.fii.TestService.service.QuestionService;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ro.uaic.fii.TestService.dto.reqDto.ResponseReqDto;
+import ro.uaic.fii.TestService.dto.resDto.ResponseResDto;
 import ro.uaic.fii.TestService.service.ResponseService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/responses")
+@RequiredArgsConstructor
 public class ResponseController {
 
-    private final HttpServletRequest request;
     private final ResponseService responseService;
-    private final QuestionService questionService;
-
-    private final ParticipantService participantService;
-    public ResponseController(HttpServletRequest request, ResponseService responseService, QuestionService questionService, ParticipantService participantService) {
-        this.request = request;
-        this.responseService = responseService;
-        this.questionService = questionService;
-        this.participantService = participantService;
-    }
+    private final HttpServletRequest request;
 
     @GetMapping
-    public ResponseEntity<List<Response>> getAllResponses() {
-        List<Response> responses = responseService.getAll();
-        return ResponseEntity.ok(responses);
+    public ResponseEntity<List<ResponseResDto>> getAllResponses() {
+        return ResponseEntity.ok(responseService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response> getResponseById(@PathVariable Integer id) {
-        Response response = responseService.getById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResponseResDto> getResponseById(@PathVariable int id) {
+        return ResponseEntity.ok(responseService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Response> addResponse(@RequestBody ResponseDto dto) {
-        Response response = ResponseDtoToModel.convert(dto,
-                request.getRemoteAddr(),
-                request.getLocale().getLanguage(),
-                dto.userUuid(),
-                null);
-        questionService.getById(dto.baseQuestionId());
-        participantService.getById(dto.participantId());
-        return ResponseEntity.ok(responseService.save(response));
+    public ResponseEntity<ResponseResDto> addResponse(@Valid @RequestBody ResponseReqDto dto) {
+        dto.setIpAddress(request.getRemoteAddr());
+        ResponseResDto responseResDto = responseService.save(dto);
+        String uri = getUriString(responseResDto);
+        return ResponseEntity.created(URI.create(uri)).body(responseResDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> updateResponse(@PathVariable Integer id,
-                                                   @RequestBody ResponseDto dto) {
-        Response response = ResponseDtoToModel.convert(dto,
-                request.getRemoteAddr(),
-                request.getLocale().getLanguage(),
-                null,
-                dto.userUuid());
-        questionService.getById(dto.baseQuestionId());
-        participantService.getById(dto.participantId());
-        Response updatedResponse = responseService.update(id, response);
-        return ResponseEntity.ok(updatedResponse);
+    public ResponseEntity<ResponseResDto> updateResponse(@PathVariable int id,
+                                                  @Valid @RequestBody ResponseReqDto dto) {
+        dto.setIpAddress(request.getRemoteAddr());
+        return ResponseEntity.ok(responseService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteResponse(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteResponse(@PathVariable int id) {
         responseService.delete(id);
-        return ResponseEntity.ok("Response with ID: " + id + " deleted.");
+        return ResponseEntity.noContent().build();
+    }
+
+    private String getUriString(ResponseResDto dto) {
+        return ServletUriComponentsBuilder.fromRequestUri(request)
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUriString();
     }
 }

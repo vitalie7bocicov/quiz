@@ -16,9 +16,7 @@ import java.util.UUID;
 public class ParticipantReqDto {
     @NotNull
     private Integer testId;
-    @NotBlank
     private String ipAddress;
-    @NotBlank
     private String locale;
     @NotNull
     private Double points;

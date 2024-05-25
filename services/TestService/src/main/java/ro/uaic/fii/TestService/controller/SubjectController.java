@@ -1,58 +1,46 @@
 package ro.uaic.fii.TestService.controller;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.uaic.fii.TestService.converter.SubjectDtoToModel;
-import ro.uaic.fii.TestService.dto.SubjectDto;
-import ro.uaic.fii.TestService.model.Subject;
+import ro.uaic.fii.TestService.dto.reqDto.SubjectReqDto;
+import ro.uaic.fii.TestService.dto.resDto.SubjectResDto;
 import ro.uaic.fii.TestService.service.SubjectService;
-import ro.uaic.fii.TestService.service.TestService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/subjects")
+@RequiredArgsConstructor
 public class SubjectController {
 
     private final SubjectService subjectService;
-    private final TestService testService;
-
-    public SubjectController(SubjectService subjectService, TestService testService) {
-        this.subjectService = subjectService;
-        this.testService = testService;
-    }
 
     @GetMapping
-    public ResponseEntity<List<Subject>> getAllSubjects() {
-        List<Subject> subjects = subjectService.getAll();
-        return ResponseEntity.ok(subjects);
+    public ResponseEntity<List<SubjectResDto>> getAllSubjects() {
+        return ResponseEntity.ok(subjectService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Subject> getSubjectById(@PathVariable Integer id) {
-        Subject subject = subjectService.getById(id);
-        return ResponseEntity.ok(subject);
+    public ResponseEntity<SubjectResDto> getSubjectById(@PathVariable int id) {
+        return ResponseEntity.ok(subjectService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Subject> createSubject(@RequestBody SubjectDto subjectDto) {
-        testService.getById(subjectDto.testId()); // check if test id is valid
-        Subject subject = SubjectDtoToModel.convert(subjectDto, subjectDto.userUuid(), null);
-        return ResponseEntity.ok(subjectService.save(subject));
+    public ResponseEntity<SubjectResDto> createSubject(@Valid @RequestBody SubjectReqDto subjectDto) {
+        return ResponseEntity.ok(subjectService.save(subjectDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable Integer id,
-                                                 @RequestBody SubjectDto subjectDto) {
-        testService.getById(subjectDto.testId());
-        Subject subject = SubjectDtoToModel.convert(subjectDto, null, subjectDto.userUuid());
-        Subject updatedSubject = subjectService.update(id, subject);
-        return ResponseEntity.ok(updatedSubject);
+    public ResponseEntity<SubjectResDto> updateSubject(@PathVariable int id,
+                                                 @Valid @RequestBody SubjectReqDto subjectDto) {
+        return ResponseEntity.ok(subjectService.update(id, subjectDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSubject(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteSubject(@PathVariable int id) {
         subjectService.delete(id);
-        return ResponseEntity.ok("Subject with ID: " + id + " deleted.");
+        return ResponseEntity.noContent().build();
     }
 }

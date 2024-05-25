@@ -1,4 +1,4 @@
-package ro.uaic.fii.TestService.model;
+package ro.uaic.fii.TestService.repository.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

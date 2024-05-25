@@ -1,53 +1,66 @@
 package ro.uaic.fii.TestService.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ro.uaic.fii.TestService.dto.mapper.SubjectMapper;
+import ro.uaic.fii.TestService.dto.reqDto.SubjectReqDto;
+import ro.uaic.fii.TestService.dto.resDto.SubjectResDto;
 import ro.uaic.fii.TestService.exceptions.BadRequestException;
 import ro.uaic.fii.TestService.exceptions.NotFoundException;
-import ro.uaic.fii.TestService.model.Subject;
-import ro.uaic.fii.TestService.model.Test;
+import ro.uaic.fii.TestService.repository.model.Subject;
 import ro.uaic.fii.TestService.repository.SubjectRepository;
+import ro.uaic.fii.TestService.repository.TestRespository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SubjectService {
+
     private final SubjectRepository subjectRepository;
+    private final TestRespository testRespository;
+    private final SubjectMapper subjectMapper;
 
-    public SubjectService(SubjectRepository subjectRepository) {
-        this.subjectRepository = subjectRepository;
+    public List<SubjectResDto> getAll() {
+        List<Subject> subjects = subjectRepository.findAll();
+        return subjects.stream().map(subjectMapper::toDto).toList();
     }
 
-
-    public List<Subject> getAll() {
-        return subjectRepository.findAll();
+    public SubjectResDto getById(int id) {
+        Subject subject =  subjectRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Subject", id));
+        return subjectMapper.toDto(subject);
     }
 
-    public Subject getById(Integer id) {
-        return  subjectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Subject with id : " + id + " not found."));
-    }
-
-    public Subject save(Subject subject) {
-        try {
-            return subjectRepository.save(subject);
-        } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+    public SubjectResDto save(SubjectReqDto dto) {
+        if (!testRespository.existsById(dto.getTestId())) {
+            throw new BadRequestException("Test", dto.getTestId());
         }
+        Subject savedSubject = subjectRepository.save(subjectMapper.dtoToEntity(dto));
+        return subjectMapper.toDto(savedSubject);
     }
 
-    public Subject update(Integer id, Subject subject) {
-        Subject subjectToUpdate = getById(id);
-        subjectToUpdate.setTestId(subject.getTestId());
-        subjectToUpdate.setSectionId(subject.getSectionId());
+    public SubjectResDto update(int id, SubjectReqDto dto) {
+        Subject subjectToUpdate = subjectRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Subject", id));
+        if (!testRespository.existsById(dto.getTestId())) {
+            throw new BadRequestException("Test", dto.getTestId());
+        }
+        subjectToUpdate.setTestId(dto.getTestId());
+        subjectToUpdate.setSectionId(dto.getSectionId());
         subjectToUpdate.setTopicId(subjectToUpdate.getTopicId());
-        subjectToUpdate.setQsType(subject.getQsType());
+        subjectToUpdate.setQsType(dto.getQsType());
         subjectToUpdate.setQsNumber(subjectToUpdate.getQsNumber());
-        subjectToUpdate.setOrderNumber(subject.getOrderNumber());
-        subjectToUpdate.setUpdateUid(subject.getUpdateUid());
-        return subjectRepository.save(subjectToUpdate);
+        subjectToUpdate.setOrderNumber(dto.getOrderNumber());
+        subjectToUpdate.setUpdateUid(dto.getUserUid());
+        Subject updatedSubject = subjectRepository.save(subjectToUpdate);
+        return subjectMapper.toDto(updatedSubject);
     }
 
     public void delete(Integer id) {
+        if (!subjectRepository.existsById(id)) {
+            throw new NotFoundException("Subject", id);
+        }
         subjectRepository.deleteById(id);
     }
 }

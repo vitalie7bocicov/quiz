@@ -1,4 +1,4 @@
-package ro.uaic.fii.TestService.model;
+package ro.uaic.fii.TestService.repository.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,25 +8,32 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "questions")
+@Table(name = "tests")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question {
+public class Test {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "questions_generator")
-    @SequenceGenerator(name = "questions_generator", sequenceName = "questions_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tests_generator")
+    @SequenceGenerator(name = "tests_generator", sequenceName = "tests_id_seq", allocationSize = 1)
     private Integer id;
-    private Integer domainId;
-    private String content;
+    private Integer courseId;
+    private String name;
+    private Integer groupId;
+    private Timestamp startTime;
+    private Integer duration;
+    private Integer optNumber;
+    private String accessCode;
     private boolean active;
+    @Column(name = "completed", columnDefinition = "boolean default false")
+    private boolean completed;
+    private boolean demo;
     private String notes;
     @CreationTimestamp
     @Column(name = "insert_ts", updatable = false)
@@ -36,12 +43,4 @@ public class Question {
     private Date updateTimestamp;
     private UUID insertUid;
     private UUID updateUid;
-
-    @ElementCollection
-    @CollectionTable(
-            name = "question_topics",
-            joinColumns = @JoinColumn(name = "question_id")
-    )
-    @Column(name = "topic_id")
-    private Set<Integer> topicIds = new HashSet<>();
 }
