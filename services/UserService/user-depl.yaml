@@ -1,30 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: course-depl
+  name: user-depl
   namespace: quiz
   labels:
-    app: course
+    app: user
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: course
+      app: user
   template:
     metadata:
       labels:
-        app: course
+        app: user
     spec:
       containers:
-        - image: vital7b/course-service:V1
+        - image: vital7b/user-service:V1
           ports:
-            - containerPort: 5003
-          imagePullPolicy: Always
-          name: course
+            - containerPort: 5001
           resources:
             requests:
-              cpu: 250m
-              memory: 500Mi
+              memory: "700Mi"
+              cpu: "250m"
+            limits:
+              memory: "750Mi"
+              cpu: "500m"
+          imagePullPolicy: Always
+          name: user
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: k8s
@@ -37,29 +40,34 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: course-service
+  name: user-service
   namespace: quiz
+  labels:
+    app: user-service
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "5001"
 spec:
   selector:
-    app: course
+    app: user
   ports:
     - protocol: TCP
-      name: http-traffic
-      port: 6003
-      targetPort: 5003
+      port: 6001
+      targetPort: 5001
   type: NodePort
 # ---
 # apiVersion: autoscaling/v2
 # kind: HorizontalPodAutoscaler
 # metadata:
-#   name: course-hpa
+#   name: user-service-hpa
 #   labels:
-#     app: course
+#     app: user
 # spec:
 #   scaleTargetRef:
 #     apiVersion: apps/v1
 #     kind: Deployment
-#     name: course-depl
+#     name: user-depl
 #   minReplicas: 1
 #   maxReplicas: 2
 #   metrics:

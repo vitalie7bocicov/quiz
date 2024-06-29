@@ -1,49 +1,3 @@
-# KUBERNETES 101
-
----
-
-## Kubernetes Components
-
----
-
-<p>
-    <b>POD<b> 
-    <br>
-    <img src="images/pod.png" alt="pod" width="300"/>
-    <br>- smallest unit of K8S 
-    <br>- abstraction over container
-    <br>- usually 1 application per Pod
-    <br>- each pod has its own IP address (internal)       
-    <br>- auto re-creation on crash
-<p>
-
-<p>
-    <b>SERVICE<b> 
-    <br>
-    <img src="images/service.png" alt="pod" width="700"/>
-    <br>- permanent IP address
-    <br>- load balancer
-<p>
-
-<p>
-    <b>DEPLOYMENT<b> 
-    <br>
-    <img src="images/deployment.png" alt="pod" width="700"/>
-    <br>- abstraction over pods
-    <br>- blueprint for app pods
-<p>
-
-## Kubernetes Architecture
-
-<p>
-Master nodes <br>
-Worker nodes <br>
-
-<img src="images/cluster-setup.png" alt="pod" width="1000"/>
-***
-
-## Minikube 101
-
 Start minikube with 2 CPUS, 2GB RAM, and enable autoscaler:
 <br>
 <code>
@@ -130,63 +84,6 @@ docker run -p port:port --network host vital7b/name-service:V1
 
 ### Deploy service in k8s using a configuration file
 
-#### Step 1: Create the deployment config file
-
-<pre>
-<code>
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: domain-depl
-  labels:
-    app: domain
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: domain
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: domain
-    spec:
-      containers:
-        - image: vital7b/domain-service:V1
-          ports:
-            - containerPort: 5000
-          imagePullPolicy: IfNotPresent
-          name: frontend-demo
-          resources:
-            requests:
-              cpu: 250m
-              memory: 128Mi
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      terminationGracePeriodSeconds: 30
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: domain-service
-spec:
-  selector:
-    app: domain
-  ports:
-    - protocol: TCP
-      port: 5000
-      targetPort: 5000
-  type: LoadBalancer
-
-</code>
-</pre>
-
 <code>
 kubectl apply -f postgres-service.yaml
 </code>
@@ -225,3 +122,26 @@ spring.datasource.password=postgres
 <code>
 minikube service domain-service --url
 </code>
+
+minikube start --cpus 4 --memory 6000 --driver=docker --extra-config=controller-manager.horizontal-pod-autoscaler-downscale-delay=30s
+minikube addons enable metrics-server
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+
+helm install prometheus prometheus-community/prometheus
+helm install grafana grafana/grafana
+helm install prometheus-operator prometheus-community/kube-prometheus-stack
+
+k expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-server-ext
+k expose service grafana --type=NodePort --target-port=3000 --name=grafana-ext
+
+minikube service prometheus-server-ext
+minikube service grafana-ext
+
+k get secret --namespace default grafana -o yaml
+
+kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml

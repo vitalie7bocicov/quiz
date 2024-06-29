@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: college-mgmt-depl
+  namespace: quiz
+  labels:
+    app: college-mgmt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: college-mgmt
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: college-mgmt
+    spec:
+      containers:
+        - image: vital7b/college-management-service:V4
+          imagePullPolicy: Always
+          name: college-mgmt
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "700Mi"
+              cpu: "500m"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 5000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: college-mgmt-service
+  namespace: quiz
+  labels:
+    app: college-mgmt
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "5000"
+spec:
+  selector:
+    app: college-mgmt
+  ports:
+    - protocol: TCP
+      name: http-traffic
+      port: 6000
+      targetPort: 5000
+  type: LoadBalancer
+
+---
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: college-mgmt-hpa
+#   namespace: quiz
+#   labels:
+#     app: college-mgmt
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: college-mgmt-depl
+#   minReplicas: 1
+#   maxReplicas: 5
+#   metrics:
+#     - type: Resource
+#       resource:
+#         name: cpu
+#         target:
+#           type: Utilization
+#           averageUtilization: 50
+#   behavior:
+#     scaleDown:
+#       stabilizationWindowSeconds: 30
+#       policies:
+#         - type: Pods
+#           value: 1
+#           periodSeconds: 30

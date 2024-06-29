@@ -56,4 +56,13 @@ public class DomainController {
                 .buildAndExpand(domainDto.getId())
                 .toUriString();
     }
+
+
+    @GetMapping("/test")
+    public ResponseEntity<String> calculate() {
+        for (long  i = 1; i < 10_000_000; i++) {
+            var sqrt = Math.sqrt(i);
+        }
+        return ResponseEntity.ok("Done");
+    }
 }

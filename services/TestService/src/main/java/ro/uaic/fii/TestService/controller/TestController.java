@@ -54,6 +54,14 @@ public class TestController {
         testService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> calculate() {
+        for (long  i = 1; i < 10_000_000; i++) {
+            var sqrt = Math.sqrt(i);
+        }
+        return ResponseEntity.ok("Done");
+    }
     private String getUriString(TestResDto dto) {
         return ServletUriComponentsBuilder.fromRequestUri(request)
                 .path("/{id}")

@@ -68,6 +68,14 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${org.mapstruct.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -78,7 +86,7 @@
 				<configuration>
 					<image>
 						<name>
-							vital7b/college-management-service:V1</name>
+							vital7b/college-management-service:V4</name>
 					</image>
 					<pullPolicy>
 						IF_NOT_PRESENT
